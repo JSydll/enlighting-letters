@@ -11,6 +11,8 @@
 #ifndef ILIGHTINGMODE_HPP
 #define ILIGHTINGMODE_HPP
 
+#include "fastLED/fastLED.h"
+
 namespace EnlightingLetters
 {
 
