@@ -5,26 +5,37 @@
 #include "CommandInterface.hpp"
 #include "GlobalState.hpp"
 #include "LightingPulse.hpp"
+#include "MusicAnalyzer.hpp"
+#include "SerialConsole.hpp"
 
-std::shared_ptr<EnlightingLetters::GlobalState> globalState;
+auto globalState = std::make_shared<EnlightingLetters::GlobalState>();
+
+auto serialConsole = EnlightingLetters::SerialConsole();
+auto commandInterface = EnlightingLetters::CommandInterface();
+auto musicAnalyzer = EnlightingLetters::MusicAnalyzer(globalState);
+
 std::unique_ptr<EnlightingLetters::ILightingMode> activeMode;
-std::unique_ptr<EnlightingLetters::CommandInterface> commandInterface;
 
 void setup()
 {
   using namespace EnlightingLetters;
+  serialConsole.Get().print("#### Starting enlighting letters ####\n");
+
   activeMode = std::make_unique<LightingPulse>(globalState);
 }
 
 void loop()
 {
-  // Cammand interface
-  if (commandInterface->HasInput())
+  // Command interface
+  if (commandInterface.HasInput())
   {
     //
   }
-  // FTT
+  // Get input
+  musicAnalyzer.UpdateState();
 
   // Process and generate output
   activeMode->Next();
+
+  serialConsole.Get().println(globalState->mSoundLevel);
 }
