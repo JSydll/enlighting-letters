@@ -2,50 +2,49 @@
 
 #include <memory>
 #include <string>
+#include <chrono>
 
 //#include "CommandInterface.hpp"
 #include "GlobalState.hpp"
-#include "LightingPulse.hpp"
+#include "LightingModes/Pulse.hpp"
+#include "LightingModes/Snake.hpp"
 //#include "MusicAnalyzer.hpp"
 #include "SerialConsole.hpp"
 
 auto globalState = std::make_shared<EnlightingLetters::GlobalState>();
 
 auto serialConsole = EnlightingLetters::SerialConsole();
-//auto commandInterface = EnlightingLetters::CommandInterface();
-//auto musicAnalyzer = EnlightingLetters::MusicAnalyzer(globalState);
-
+// auto commandInterface = EnlightingLetters::CommandInterface();
+// auto musicAnalyzer = EnlightingLetters::MusicAnalyzer(globalState);
 std::shared_ptr<EnlightingLetters::LedController> ledController;
-std::unique_ptr<EnlightingLetters::ILightingMode> activeMode;
+
+using namespace std::chrono;
+steady_clock::time_point tStart;
 
 void setup()
 {
   using namespace EnlightingLetters;
   serialConsole().println("#### Starting enlighting letters ####");
-  serialConsole().println("Default global state: ");
-  serialConsole().print("\tLighting mode: ");
-  serialConsole().println(static_cast<int>(globalState->mMode));
-  serialConsole().print("\tLighting color: ");
-  serialConsole().println(static_cast<int>(globalState->mColor));
-  serialConsole().print("\tAnimation speed: ");
-  serialConsole().println(globalState->mAnimationSpeed);
   delay(2000);
-  ledController = std::make_shared<LedController>();
-  activeMode = std::make_unique<LightingPulse>(globalState, ledController);
+  ledController = LedController::Create(globalState);
+  // ledController->SetProcessor(std::make_shared<Pulse>(globalState, ledController));
+  ledController->SetProcessor(std::make_shared<Snake>(ledController));
+  tStart = steady_clock::now();
 }
 
 void loop()
 {
+  using namespace EnlightingLetters;
   // Command interface
   /*if (commandInterface.HasInput())
   {
     //
   }*/
   // Get input
-  //musicAnalyzer.UpdateState();
+  // musicAnalyzer.UpdateState();
 
   // Process and generate output
-  activeMode->Next();
+  ledController->Update();
 
-  //serialConsole().println(globalState->mSoundLevel);
+  // serialConsole().println(globalState->mSoundLevel);
 }

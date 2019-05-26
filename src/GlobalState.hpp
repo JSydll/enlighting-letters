@@ -19,7 +19,7 @@ struct GlobalState
   enum class LightingMode : uint8_t
   {
     PULSE = 0,
-    ROTATE = 1,
+    GLOWING_SNAKE = 1,
     RAIN_DROPS = 2,
     SPECTRUM = 3
   };
