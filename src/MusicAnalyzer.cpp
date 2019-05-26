@@ -1,5 +1,6 @@
 #include "MusicAnalyzer.hpp"
 
+#include <chrono>
 #include "arduinoFFT/src/arduinoFFT.h"
 
 namespace EnlightingLetters
@@ -32,7 +33,7 @@ void MusicAnalyzer::UpdateState()
   i2s_read(kI2CPort, &sample, sizeof(sample), &bytes_read, portMAX_DELAY);
   if(bytes_read == sizeof(sample))
   {
-    mState->mSoundLevel = sample;
+    mState->mSoundLevel = static_cast<int16_t>(sample>>16);
   }
   else
   {

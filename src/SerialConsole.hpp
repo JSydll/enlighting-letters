@@ -23,7 +23,7 @@ class SerialConsole
   SerialConsole(int baudRate = 115200) { Serial.begin(baudRate); }
   ~SerialConsole() { Serial.flush(); };
 
-  HardwareSerial& Get() { return Serial; }
+  HardwareSerial& operator()() { return Serial; }
 };
 }  // namespace EnlightingLetters
 

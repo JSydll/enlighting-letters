@@ -11,8 +11,6 @@
 #ifndef ILIGHTINGMODE_HPP
 #define ILIGHTINGMODE_HPP
 
-#include "fastLED/fastLED.h"
-
 namespace EnlightingLetters
 {
 
@@ -22,8 +20,11 @@ class ILightingMode
   ILightingMode() = default;
   virtual ~ILightingMode() = default;
 
-  virtual void Next();
+  virtual void Next() = 0;
+
+  virtual void SetAnimationSpeed() = 0;
 };
+
 }  // namespace EnlightingLetters
 
 #endif
