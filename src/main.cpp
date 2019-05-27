@@ -28,7 +28,11 @@ void setup()
   delay(2000);
   ledController = LedController::Create(globalState);
   // ledController->SetProcessor(std::make_shared<Pulse>(globalState, ledController));
-  ledController->SetProcessor(std::make_shared<Snake>(ledController));
+  CRGBPalette16 palette = RainbowColors_p;
+  palette[0] = CRGB::Black;
+  palette[1] = CRGB::Black;
+  auto proc = std::make_shared<Snake>(ledController, palette);
+  ledController->SetProcessor(proc);
   tStart = steady_clock::now();
 }
 
