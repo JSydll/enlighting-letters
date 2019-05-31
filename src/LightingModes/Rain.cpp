@@ -29,10 +29,10 @@ void Rain::PerformUpdate()
     {
       startIndex = std::min(seg.mEnd, std::max(seg.mVirtualBegin, seg.mBegin));
       firstModifiedLed = startIndex;
-      endIndex = std::min(seg.mEnd, std::max(seg.mVirtualBegin + 16, seg.mBegin));
+      endIndex = std::min(seg.mEnd, std::max(seg.mVirtualBegin + kAnimationSize, seg.mBegin));
       for (animationIndex = 0; startIndex < endIndex; animationIndex++)
       {
-        mController->FillWithColor(startIndex++, CHSV(255, 0, mAnimationPane[animationIndex]));
+        mController->FillWithColor(startIndex++, CHSV(255, 0, kAnimationPane[animationIndex]));
       }
       seg.mVirtualBegin++;
     }
@@ -40,10 +40,10 @@ void Rain::PerformUpdate()
     {
       startIndex = std::min(seg.mBegin, std::max(seg.mVirtualBegin, seg.mEnd));
       firstModifiedLed = startIndex;
-      endIndex = std::min(seg.mBegin, std::max(seg.mVirtualBegin - 16, seg.mEnd));
+      endIndex = std::min(seg.mBegin, std::max(seg.mVirtualBegin - kAnimationSize, seg.mEnd));
       for (animationIndex = 0; startIndex > endIndex; animationIndex++)
       {
-        mController->FillWithColor(startIndex--, CHSV(255, 0, mAnimationPane[animationIndex]));
+        mController->FillWithColor(startIndex--, CHSV(255, 0, kAnimationPane[animationIndex]));
       }
       seg.mVirtualBegin--;
     }
@@ -51,7 +51,8 @@ void Rain::PerformUpdate()
     mController->FillWithColor(firstModifiedLed, CRGB::Black);
     if (seg.mVirtualBegin == seg.mEnd)
     {
-      seg.mVirtualBegin = (seg.mIsReverse ? seg.mBegin + 16 : seg.mBegin - 16);
+      seg.mVirtualBegin =
+          (seg.mIsReverse ? seg.mBegin + kAnimationSize : seg.mBegin - kAnimationSize);
       seg.mActiveSegment = false;
     }
   }
@@ -61,8 +62,9 @@ void Rain::PerformUpdate()
   static uint8_t index = 0;
   for (index = 0; index < 39; index++)
   {
-    (mFloorDropFlags & (1 << index) ? mController->FillWithColor(mFloorBegin + (2 * index), CRGB::White)
-                                    : mController->FillWithColor(mFloorBegin + (2 * index), CRGB::Black));
+    (mFloorDropFlags & (1 << index)
+         ? mController->FillWithColor(kFloorBegin + (2 * index), CRGB::White)
+         : mController->FillWithColor(kFloorBegin + (2 * index), CRGB::Black));
   }
   FastLED.show();
 }
