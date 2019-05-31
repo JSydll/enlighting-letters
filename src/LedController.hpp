@@ -43,7 +43,7 @@ class LedController final
 
   void FillWithColor(uint16_t ledIndex, CRGB color);
 
-  void FillWithColor(uint16_t ledIndex, GlobalState::LightingColor& color);
+  void FillWithColor(uint16_t ledIndex, GlobalState::LightingColor color);
 
   void FillAllWithColor(CRGB color);
 

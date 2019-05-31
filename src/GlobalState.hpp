@@ -33,7 +33,8 @@ struct GlobalState
     BLUE = 5, 
     VIOLET = 6,
     PINK = 7,
-    WHITE = 8
+    WHITE = 8, 
+    BLACK = 9
   };
 
   LightingMode mMode = LightingMode::PULSE;     // Currently active mode

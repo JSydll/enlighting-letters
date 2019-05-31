@@ -61,7 +61,7 @@ void LedController::FillWithColor(uint16_t ledIndex, CRGB color)
                                                                           : color);
 }
 
-void LedController::FillWithColor(uint16_t ledIndex, GlobalState::LightingColor& color)
+void LedController::FillWithColor(uint16_t ledIndex, GlobalState::LightingColor color)
 {
   FillWithColor(ledIndex, Convert(color));
 }
@@ -117,6 +117,7 @@ CRGB LedController::Convert(const GlobalState::LightingColor& color)
     case lc::BLUE: return CRGB::Blue;
     case lc::VIOLET: return CRGB::Violet;
     case lc::PINK: return CRGB::Pink;
+    case lc::BLACK: return CRGB::Black;
     default:;
   }
   return CRGB::White;
@@ -124,6 +125,10 @@ CRGB LedController::Convert(const GlobalState::LightingColor& color)
 
 CRGB LedController::CorrectColor(CRGB colorIn)
 {
+  if (colorIn.r == colorIn.g and colorIn.g == colorIn.b)
+  {
+    return colorIn;
+  }
   return CRGB((colorIn.g > 29 ? colorIn.g - 30 : 0), (colorIn.r < 241 ? colorIn.r + 15 : 255),
               colorIn.b);
 }
