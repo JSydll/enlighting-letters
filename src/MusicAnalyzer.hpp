@@ -16,7 +16,7 @@
 #include <FreeRTOS.h>
 #include <driver/i2s.h>
 
-#include "GlobalState.hpp"
+#include "GlobalController.hpp"
 
 namespace EnlightingLetters
 {
@@ -27,13 +27,13 @@ namespace EnlightingLetters
 class MusicAnalyzer
 {
  public:
-  MusicAnalyzer(std::shared_ptr<GlobalState> state);
+  MusicAnalyzer(std::shared_ptr<GlobalController> state);
   ~MusicAnalyzer();
 
   void UpdateState();
 
  private:
-  std::shared_ptr<GlobalState> mState;
+  std::shared_ptr<GlobalController> mGlobalController;
   bool mOk;
 
   const i2s_port_t kI2CPort = I2S_NUM_0;

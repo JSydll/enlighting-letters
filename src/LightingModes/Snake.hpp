@@ -25,7 +25,7 @@ namespace EnlightingLetters
 class Snake final : public ILightingProcessor
 {
  public:
-  Snake(std::shared_ptr<LedController>& controller, CRGBPalette16 palette = RainbowColors_p);
+  Snake(std::shared_ptr<LedController>& controller, CRGBPalette16 palette = CRGBPalette16(RainbowColors_p));
   virtual ~Snake() = default;
 
   virtual void PerformUpdate() override;

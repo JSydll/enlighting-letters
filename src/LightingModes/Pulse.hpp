@@ -13,7 +13,7 @@
 
 #include <memory>
 
-#include "../GlobalState.hpp"
+#include "../GlobalController.hpp"
 #include "../ILightingProcessor.hpp"
 #include "../LedController.hpp"
 
@@ -26,7 +26,7 @@ namespace EnlightingLetters
 class Pulse final : public ILightingProcessor
 {
  public:
-  Pulse(std::shared_ptr<GlobalState>& state, std::shared_ptr<LedController>& controller);
+  Pulse(std::shared_ptr<GlobalController>& state, std::shared_ptr<LedController>& controller);
   virtual ~Pulse() = default;
 
   virtual void PerformUpdate() override;
@@ -34,7 +34,7 @@ class Pulse final : public ILightingProcessor
   virtual int GetStepsPerAnimation() override;
 
  private:
-  std::shared_ptr<GlobalState> mState;
+  std::shared_ptr<GlobalController> mGlobalController;
   std::shared_ptr<LedController> mController;
   bool mIsAscending = true;
   uint8_t mCurrentHue = 0;

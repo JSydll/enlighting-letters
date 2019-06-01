@@ -4,7 +4,7 @@ namespace EnlightingLetters
 {
 using namespace std::chrono;
 
-std::shared_ptr<LedController> LedController::Create(std::shared_ptr<GlobalState>& state)
+std::shared_ptr<LedController> LedController::Create(std::shared_ptr<GlobalController> state)
 {
   return std::shared_ptr<LedController>(new LedController(state));
 }
@@ -13,23 +13,21 @@ void LedController::Update()
 {
   if (duration_cast<milliseconds>(steady_clock::now() - mLastUpdate) > mUpdateInterval)
   {
-    if (mProcessor)
+    if (mGlobalController->lightingProcessor)
     {
-      mProcessor->PerformUpdate();
+      mGlobalController->lightingProcessor->PerformUpdate();
     }
     mLastUpdate = steady_clock::now();
   }
 }
 
-void LedController::SetProcessor(std::shared_ptr<ILightingProcessor> processor)
-{
-  mProcessor = processor;
-  SetAnimationSpeed();
-}
-
 void LedController::SetAnimationSpeed()
 {
-  mUpdateInterval = milliseconds(mState->mAnimationSpeed / mProcessor->GetStepsPerAnimation());
+  if (mGlobalController->lightingProcessor)
+  {
+    mUpdateInterval = milliseconds(mGlobalController->data.mAnimationSpeed /
+                                   mGlobalController->lightingProcessor->GetStepsPerAnimation());
+  }
 }
 
 void LedController::FillAllWithColor(CRGB color)
@@ -49,7 +47,7 @@ void LedController::FillAllWithColor(CRGB color)
   }
 }
 
-void LedController::FillAllWithColor(GlobalState::LightingColor& color)
+void LedController::FillAllWithColor(GlobalController::LightingColor& color)
 {
   FillAllWithColor(Convert(color));
 }
@@ -61,7 +59,7 @@ void LedController::FillWithColor(uint16_t ledIndex, CRGB color)
                                                                           : color);
 }
 
-void LedController::FillWithColor(uint16_t ledIndex, GlobalState::LightingColor color)
+void LedController::FillWithColor(uint16_t ledIndex, GlobalController::LightingColor color)
 {
   FillWithColor(ledIndex, Convert(color));
 }
@@ -99,15 +97,15 @@ void LedController::FillAllFromPalette(CRGBPalette16& palette, uint8_t index)
   }
 }
 
-LedController::LedController(std::shared_ptr<GlobalState>& state) : mState(state)
+LedController::LedController(std::shared_ptr<GlobalController>& state) : mGlobalController(state)
 {
   FastLED.addLeds<WS2812B, kLedPin>(mLedAccessor, kTotalLedCount).setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(kBrightness);
 }
 
-CRGB LedController::Convert(const GlobalState::LightingColor& color)
+CRGB LedController::Convert(const GlobalController::LightingColor& color)
 {
-  using lc = GlobalState::LightingColor;
+  using lc = GlobalController::LightingColor;
   switch (color)
   {
     case lc::RED: return CRGB::Red;

@@ -25,7 +25,7 @@ namespace EnlightingLetters
 class Glow final : public ILightingProcessor
 {
  public:
-  Glow(std::shared_ptr<LedController>& controller, CRGBPalette16 palette = RainbowColors_p);
+  Glow(std::shared_ptr<LedController>& controller, CRGBPalette16 palette = CRGBPalette16(RainbowColors_p));
   virtual ~Glow() = default;
 
   virtual void PerformUpdate() override;

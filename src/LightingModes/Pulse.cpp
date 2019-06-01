@@ -3,8 +3,8 @@
 namespace EnlightingLetters
 {
 
-Pulse::Pulse(std::shared_ptr<GlobalState>& state, std::shared_ptr<LedController>& controller)
-    : mState(state), mController(controller)
+Pulse::Pulse(std::shared_ptr<GlobalController>& state, std::shared_ptr<LedController>& controller)
+    : mGlobalController(state), mController(controller)
 {}
 
 void Pulse::PerformUpdate()
@@ -16,9 +16,9 @@ void Pulse::PerformUpdate()
   else if (mCurrentBrightness == 0)
   {
     mIsAscending = true;
-    if (mState->mColor != GlobalState::LightingColor::RANDOM)
+    if (mGlobalController->data.mColor != GlobalController::LightingColor::RANDOM)
     {
-      mController->FillAllWithColor(mState->mColor);
+      mController->FillAllWithColor(mGlobalController->data.mColor);
     }
     else
     {

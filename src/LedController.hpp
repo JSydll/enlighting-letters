@@ -15,7 +15,7 @@
 #include <chrono>
 #include <memory>
 
-#include "GlobalState.hpp"
+#include "GlobalController.hpp"
 #include "ILightingProcessor.hpp"
 
 namespace EnlightingLetters
@@ -31,23 +31,21 @@ class LedController final
   const static int kLastLedStripeTwo = 209;
   const static int kLastLedStripeThree = 330;
 
-  static std::shared_ptr<LedController> Create(std::shared_ptr<GlobalState>& state);
+  static std::shared_ptr<LedController> Create(std::shared_ptr<GlobalController> state);
 
   ~LedController() = default;
 
   void Update();
 
-  void SetProcessor(std::shared_ptr<ILightingProcessor> processor);
-
   void SetAnimationSpeed();
 
   void FillWithColor(uint16_t ledIndex, CRGB color);
 
-  void FillWithColor(uint16_t ledIndex, GlobalState::LightingColor color);
+  void FillWithColor(uint16_t ledIndex, GlobalController::LightingColor color);
 
   void FillAllWithColor(CRGB color);
 
-  void FillAllWithColor(GlobalState::LightingColor& color);
+  void FillAllWithColor(GlobalController::LightingColor& color);
 
   void CreateRandomPalette(CRGBPalette16& palette);
 
@@ -55,16 +53,15 @@ class LedController final
 
   void FillAllFromPalette(CRGBPalette16& palette, uint8_t index);
 
-private:
+ private:
   CRGB mLedAccessor[kTotalLedCount];
-  std::shared_ptr<GlobalState> mState;
-  std::shared_ptr<ILightingProcessor> mProcessor;
+  std::shared_ptr<GlobalController> mGlobalController;
   std::chrono::steady_clock::time_point mLastUpdate;
   std::chrono::milliseconds mUpdateInterval;
 
-  LedController(std::shared_ptr<GlobalState>& state);
+  LedController(std::shared_ptr<GlobalController>& state);
 
-  CRGB Convert(const GlobalState::LightingColor& color);
+  CRGB Convert(const GlobalController::LightingColor& color);
 
   CRGB CorrectColor(CRGB colorIn);
 };
