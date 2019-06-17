@@ -3,6 +3,7 @@
 #include "CommandInterface.hpp"
 // Default lighting mode (rest is in command interface)
 #include "LightingModes/Glow.hpp"
+#include "MusicAnalyzer.hpp"
 
 namespace EnlightingLetters
 {
@@ -16,5 +17,6 @@ void GlobalController::Init()
   commandInterface = CommandInterface::Create(shared_from_this());
   // Default the lightingProcessor to PULSE
   lightingProcessor = std::make_shared<Glow>(ledController);
+  musicAnalyzer = std::make_shared<MusicAnalyzer>(shared_from_this());
 }
 }

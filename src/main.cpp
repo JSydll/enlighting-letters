@@ -5,11 +5,8 @@
 
 #include "CommandInterface.hpp"
 #include "GlobalController.hpp"
-#include "LightingModes/Glow.hpp"
-#include "LightingModes/Pulse.hpp"
-#include "LightingModes/Rain.hpp"
-#include "LightingModes/Snake.hpp"
-//#include "MusicAnalyzer.hpp"
+#include "LedController.hpp"
+#include "MusicAnalyzer.hpp"
 #include "SerialConsole.hpp"
 
 auto globalController = EnlightingLetters::GlobalController::Create();
@@ -34,10 +31,16 @@ void loop()
   // Command interface
   globalController->commandInterface->Update();
   // Get input
-  // musicAnalyzer.UpdateState();
+  globalController->musicAnalyzer->Update();
 
   // Process and generate output
   globalController->ledController->Update();
 
-  // serialConsole().println(GlobalController->mSoundLevel);
+  // Debug printing
+  for (auto& freq : globalController->data.mFrequencies)
+  {
+    globalController->console().print(freq, 2);
+    globalController->console().print(" ");
+  }
+  globalController->console().println();
 }

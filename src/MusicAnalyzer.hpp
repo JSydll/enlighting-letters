@@ -12,9 +12,7 @@
 #define MUSICANALYZER_HPP
 
 #include <memory>
-
-#include <FreeRTOS.h>
-#include <driver/i2s.h>
+#include "arduinoFFT.h"
 
 #include "GlobalController.hpp"
 
@@ -27,32 +25,29 @@ namespace EnlightingLetters
 class MusicAnalyzer
 {
  public:
-  MusicAnalyzer(std::shared_ptr<GlobalController> state);
+  MusicAnalyzer(std::shared_ptr<GlobalController> globalController);
   ~MusicAnalyzer();
 
-  void UpdateState();
+  void Update();
 
  private:
   std::shared_ptr<GlobalController> mGlobalController;
+  arduinoFFT mFFT;
   bool mOk;
 
-  const i2s_port_t kI2CPort = I2S_NUM_0;
-  const i2s_config_t kI2CConfig = {
-      .mode = i2s_mode_t(I2S_MODE_MASTER | I2S_MODE_RX),
-      .sample_rate = 32000,
-      .bits_per_sample = I2S_BITS_PER_SAMPLE_32BIT,
-      .channel_format = I2S_CHANNEL_FMT_ONLY_RIGHT,
-      .communication_format = i2s_comm_format_t(I2S_COMM_FORMAT_I2S | I2S_COMM_FORMAT_I2S_MSB),
-      .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
-      .dma_buf_count = 8,
-      .dma_buf_len = 16};
-  const i2s_pin_config_t kPinConfig = {
-      .bck_io_num = 26,  // BCKL
-      .ws_io_num = 25,   // LRCL
-      .data_out_num = I2S_PIN_NO_CHANGE,
-      .data_in_num = 22  // DOUT
-  };
+  const int kInputPin = 36;
+  static const uint16_t kSampleSize = 256;
+  const uint16_t kSampleRate = 40000;
+  const int kMicrosBetweenSamples = 1000000 / kSampleRate;
+  const uint8_t kFrequencyBands = 8;
+  // According to Nyquist-Theorem, only half of the samples represents the freq. from 0 to
+  // kSampleRate/2 Hz.
+  const int kFrequenciesPerBand = kSampleSize / 2 / kFrequencyBands;
+
+  const double kRationalThreshold = 6000.0;
+  double CalculateAmplitude(std::array<double, 0>::iterator first, int startIndex, int numSamples);
 };
+
 }  // namespace EnlightingLetters
 
 #endif
