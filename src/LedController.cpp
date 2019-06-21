@@ -72,7 +72,8 @@ void LedController::CreateRandomPalette(CRGBPalette16& palette)
   }
 }
 
-void LedController::FillFromPalette(uint16_t ledIndex, CRGBPalette16& palette, uint8_t colorIndex)
+void LedController::FillFromPalette(uint16_t ledIndex, const CRGBPalette16& palette,
+                                    uint8_t colorIndex)
 {
   mLedAccessor[ledIndex] =
       ((ledIndex > kLastLedStripeOne) and (ledIndex <= kLastLedStripeTwo)
@@ -80,7 +81,7 @@ void LedController::FillFromPalette(uint16_t ledIndex, CRGBPalette16& palette, u
            : ColorFromPalette(palette, colorIndex, 255, LINEARBLEND));
 }
 
-void LedController::FillAllFromPalette(CRGBPalette16& palette, uint8_t index)
+void LedController::FillAllFromPalette(const CRGBPalette16& palette, uint8_t index)
 {
   int i = 0;
   while (i <= kLastLedStripeOne)
@@ -94,6 +95,39 @@ void LedController::FillAllFromPalette(CRGBPalette16& palette, uint8_t index)
   while (i <= kLastLedStripeThree)
   {
     mLedAccessor[i++] = ColorFromPalette(palette, index, 255, LINEARBLEND);
+  }
+}
+
+void LedController::InitHSVApproximation()
+{
+  if (not mHSVApprox.empty())
+  {
+    mHSVApprox.clear();
+  }
+  mHSVApprox.reserve(sizeof(mLedAccessor));
+  for (const auto& led : mLedAccessor)
+  {
+    mHSVApprox.push_back(rgb2hsv_approximate(led));
+  }
+}
+
+void LedController::IncreaseBrightness(uint16_t ledIndex, uint8_t amount)
+{
+  if (not mHSVApprox.empty())
+  {
+    mHSVApprox[ledIndex].value = clip(static_cast<uint8_t>(mHSVApprox[ledIndex].value + amount),
+                                      mHSVApprox[ledIndex].value, static_cast<uint8_t>(255));
+    mLedAccessor[ledIndex] = mHSVApprox[ledIndex];
+  }
+}
+
+void LedController::ReduceBrightness(uint16_t ledIndex, uint8_t amount)
+{
+  if (not mHSVApprox.empty())
+  {
+    mHSVApprox[ledIndex].value = clip(static_cast<uint8_t>(mHSVApprox[ledIndex].value - amount),
+                                      static_cast<uint8_t>(0), mHSVApprox[ledIndex].value);
+    mLedAccessor[ledIndex] = mHSVApprox[ledIndex];
   }
 }
 

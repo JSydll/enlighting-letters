@@ -14,12 +14,19 @@
 #include <FastLED.h>
 #include <chrono>
 #include <memory>
+#include <math.h>
 
 #include "GlobalController.hpp"
 #include "ILightingProcessor.hpp"
 
 namespace EnlightingLetters
 {
+
+template <typename value_t>
+value_t clip(const value_t& n, const value_t& lower, const value_t& upper)
+{
+  return std::max(lower, std::min(n, upper));
+}
 
 class LedController final
 {
@@ -49,15 +56,25 @@ class LedController final
 
   void CreateRandomPalette(CRGBPalette16& palette);
 
-  void FillFromPalette(uint16_t ledIndex, CRGBPalette16& palette, uint8_t colorIndex);
+  void FillFromPalette(uint16_t ledIndex, const CRGBPalette16& palette, uint8_t colorIndex);
 
-  void FillAllFromPalette(CRGBPalette16& palette, uint8_t index);
+  void FillAllFromPalette(const CRGBPalette16& palette, uint8_t index);
+
+  void InitHSVApproximation();
+
+  void IncreaseBrightness(uint16_t ledIndex, uint8_t amount);
+
+  void ReduceBrightness(uint16_t ledIndex, uint8_t amount);
+
+  CRGB mLedAccessor[kTotalLedCount];
 
  private:
-  CRGB mLedAccessor[kTotalLedCount];
   std::shared_ptr<GlobalController> mGlobalController;
   std::chrono::steady_clock::time_point mLastUpdate;
   std::chrono::milliseconds mUpdateInterval;
+  // To use HSV operations on the LEDs, a shadow array of HSV values must be stored. Ideally, this
+  // is only seldomly build from scratch, as this takes quite some time.
+  std::vector<CHSV> mHSVApprox;
 
   LedController(std::shared_ptr<GlobalController>& state);
 
