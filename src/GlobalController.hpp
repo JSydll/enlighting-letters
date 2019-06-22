@@ -64,7 +64,7 @@ class GlobalController : public std::enable_shared_from_this<GlobalController>
     LightingMode mMode = LightingMode::PULSE;      // Currently active mode
     LightingColor mColor = LightingColor::RANDOM;  // Currently active color
     int mAnimationSpeed = 2000;  // Number of milliseconds, one full animation cycle should take
-    std::vector<double> mFrequencies;
+    std::vector<long> mFrequencies;
   } data;
  private:
   GlobalController() = default;

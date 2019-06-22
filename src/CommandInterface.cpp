@@ -4,6 +4,7 @@
 #include "LightingModes/Pulse.hpp"
 #include "LightingModes/Rain.hpp"
 #include "LightingModes/Snake.hpp"
+#include "LightingModes/Spectrum.hpp"
 
 namespace EnlightingLetters
 {
@@ -32,6 +33,13 @@ void CommandInterface::Update()
     mCommandQueue.pop();
     switch (hash(cmd.c_str()))
     {
+      case hash("mode:spectrum"):
+        if (mGlobalController->data.mMode != GlobalController::LightingMode::SPECTRUM)
+        {
+          mGlobalController->data.mMode = GlobalController::LightingMode::SPECTRUM;
+          mGlobalController->lightingProcessor = std::make_shared<Spectrum>(mGlobalController);
+        }
+        break;
       case hash("mode:glow"):
         if (mGlobalController->data.mMode != GlobalController::LightingMode::GLOW)
         {

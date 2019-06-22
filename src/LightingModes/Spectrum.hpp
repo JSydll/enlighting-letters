@@ -36,8 +36,8 @@ const TProgmemRGBPalette16 MusicSpectrum_p FL_PROGMEM = {
 class Spectrum final : public ILightingProcessor
 {
  public:
-  Spectrum(std::shared_ptr<GlobalController>& controller);
-  Spectrum(std::shared_ptr<GlobalController>& controller, CRGBPalette16 palette);
+  Spectrum(std::shared_ptr<GlobalController> controller);
+  Spectrum(std::shared_ptr<GlobalController> controller, CRGBPalette16 palette);
   virtual ~Spectrum() = default;
 
   virtual void PerformUpdate() override;

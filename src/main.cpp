@@ -36,11 +36,13 @@ void loop()
   // Process and generate output
   globalController->ledController->Update();
 
+
   // Debug printing
-  for (auto& freq : globalController->data.mFrequencies)
+  for (auto freq = 1; freq < globalController->data.mFrequencies.size(); ++freq)
   {
-    globalController->console().print(freq, 2);
+    globalController->console().print(globalController->data.mFrequencies[freq]);
     globalController->console().print(" ");
   }
   globalController->console().println();
+  
 }

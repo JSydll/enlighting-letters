@@ -3,7 +3,7 @@
 namespace EnlightingLetters
 {
 
-Glow::Glow(std::shared_ptr<LedController>& controller, CRGBPalette16 palette) : mController(controller), mColorPalette(palette)
+Glow::Glow(std::shared_ptr<LedController> controller, CRGBPalette16 palette) : mController(controller), mColorPalette(palette)
 {
 }
 

@@ -3,7 +3,7 @@
 namespace EnlightingLetters
 {
 
-Pulse::Pulse(std::shared_ptr<GlobalController>& state, std::shared_ptr<LedController>& controller)
+Pulse::Pulse(std::shared_ptr<GlobalController> state, std::shared_ptr<LedController> controller)
     : mGlobalController(state), mController(controller)
 {}
 

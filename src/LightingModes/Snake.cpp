@@ -3,7 +3,7 @@
 namespace EnlightingLetters
 {
 
-Snake::Snake(std::shared_ptr<LedController>& controller, CRGBPalette16 palette) : mController(controller), mColorPalette(palette)
+Snake::Snake(std::shared_ptr<LedController> controller, CRGBPalette16 palette) : mController(controller), mColorPalette(palette)
 {
 }
 

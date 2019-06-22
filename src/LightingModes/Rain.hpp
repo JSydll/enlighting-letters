@@ -28,7 +28,7 @@ namespace EnlightingLetters
 class Rain final : public ILightingProcessor
 {
  public:
-  Rain(std::shared_ptr<LedController>& controller);
+  Rain(std::shared_ptr<LedController> controller);
   virtual ~Rain() = default;
 
   virtual void PerformUpdate() override;

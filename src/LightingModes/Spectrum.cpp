@@ -5,12 +5,12 @@
 namespace EnlightingLetters
 {
 
-Spectrum::Spectrum(std::shared_ptr<GlobalController>& controller) : mController(controller)
+Spectrum::Spectrum(std::shared_ptr<GlobalController> controller) : mController(controller)
 {
   Fill(CRGBPalette16(MusicSpectrum_p));
 }
 
-Spectrum::Spectrum(std::shared_ptr<GlobalController>& controller, CRGBPalette16 palette)
+Spectrum::Spectrum(std::shared_ptr<GlobalController> controller, CRGBPalette16 palette)
     : mController(controller)
 {
   Fill(palette);
@@ -90,6 +90,6 @@ void Spectrum::PerformUpdate()
   FastLED.show();
 }
 
-int Spectrum::GetStepsPerAnimation() { return 400; }
+int Spectrum::GetStepsPerAnimation() { return 10; }
 
 }  // namespace EnlightingLetters

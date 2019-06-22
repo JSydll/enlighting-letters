@@ -5,7 +5,7 @@
 namespace EnlightingLetters
 {
 
-Rain::Rain(std::shared_ptr<LedController>& controller) : mController(controller)
+Rain::Rain(std::shared_ptr<LedController> controller) : mController(controller)
 {
   mController->FillAllWithColor(CRGB::Black);
   FastLED.show();

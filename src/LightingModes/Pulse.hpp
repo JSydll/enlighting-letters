@@ -26,7 +26,7 @@ namespace EnlightingLetters
 class Pulse final : public ILightingProcessor
 {
  public:
-  Pulse(std::shared_ptr<GlobalController>& state, std::shared_ptr<LedController>& controller);
+  Pulse(std::shared_ptr<GlobalController> state, std::shared_ptr<LedController> controller);
   virtual ~Pulse() = default;
 
   virtual void PerformUpdate() override;
