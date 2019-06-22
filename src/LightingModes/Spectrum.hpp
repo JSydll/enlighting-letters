@@ -22,15 +22,11 @@
 
 namespace EnlightingLetters
 {
-
 const TProgmemRGBPalette16 MusicSpectrum_p FL_PROGMEM = {
-    0x005A32, 0x238443, 0x238443, 0x238443, 0x41AB5D, 0x41AB5D, 0x99DBB8, 0x66CCCE,
-    0x99DBB8, 0xCCE64B, 0xFCC707, 0xF89D0E, 0xF89D0E, 0xF57215, 0xF1471C, 0xDB1E26};
-
-const TProgmemRGBPalette16 MusicSpectrum2_p FL_PROGMEM = {
-    CRGB::Green,       CRGB::Green,  CRGB::Green,  CRGB::Green,  CRGB::Green,  CRGB::Green,
-    CRGB::GreenYellow, CRGB::Yellow, CRGB::Yellow, CRGB::Orange, CRGB::Orange, CRGB::Orange,
-    CRGB::OrangeRed,   CRGB::Red,    CRGB::Red,    CRGB::Red};
+    CRGB::LimeGreen, CRGB::LimeGreen, CRGB::LimeGreen,   CRGB::LimeGreen,
+    CRGB::LimeGreen, CRGB::LimeGreen, CRGB::GreenYellow, CRGB::Yellow,
+    CRGB::Yellow,    CRGB::Orange,    CRGB::Orange,      CRGB::Orange,
+    CRGB::OrangeRed, CRGB::Red,       CRGB::Red,         CRGB::Red};
 
 /**
  * @brief
@@ -63,17 +59,14 @@ class Spectrum final : public ILightingProcessor
 
   // Segments from left to right
   const std::vector<SegmentControl> kSegments = {
-      {{6, 40}, {76, 41}, 35},     {{77, 81}, {86, 82}, 4},      {{87, 91}, {97, 92}, 5},
+      {{5, 40}, {76, 41}, 35},     {{77, 81}, {86, 82}, 4},      {{87, 91}, {97, 92}, 5},
       {{98, 104}, {109, 104}, 5},  {{110, 128}, {147, 129}, 18}, {{148, 155}, {163, 156}, 7},
       {{164, 171}, {179, 172}, 7}, {{180, 214}, {250, 215}, 35}};
 
   // Frequency bands:
   // [0] 150Hz - [1] 400Hz [2] 1kHz - [3] 2kHz
   // [4] 4kHz - [5] 8kHz - [6] 16kz - [7] 20kHz
-  const std::vector<uint8_t> kBandToSegmentMapping = 
-  {
-    3, 6, 2, 7, 4, 0, 5, 1
-  };
+  const std::vector<uint8_t> kBandToSegmentMapping = {3, 6, 2, 5, 4, 0, 7, 1};
 
   // To show the frequency values, the maximum values need to be known.
   std::vector<long> mMaxFrequencies = {1, 1, 1, 1, 1, 1, 1, 1};

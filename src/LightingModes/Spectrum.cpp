@@ -4,11 +4,9 @@
 
 namespace EnlightingLetters
 {
-
 Spectrum::Spectrum(std::shared_ptr<GlobalController> controller) : mController(controller)
 {
-  Fill(CRGBPalette16(MusicSpectrum2_p));
-  // Fill(CRGBPalette16(RainbowColors_p));
+  Fill(CRGBPalette16(PartyColors_p));
 }
 
 Spectrum::Spectrum(std::shared_ptr<GlobalController> controller, CRGBPalette16 palette)
@@ -67,7 +65,7 @@ void Spectrum::PerformUpdate()
     {
       mMaxFrequencies[freqNum] = currentValue;
     }
-    else if(mMaxFrequencies[freqNum] != 1 and resetCycle++ % 4 == 0)
+    else if(mMaxFrequencies[freqNum] != 1 and resetCycle++ % 8 == 0)
     {
       mMaxFrequencies[freqNum]--;
     }
@@ -75,7 +73,7 @@ void Spectrum::PerformUpdate()
     mController->console().print(mappedHeight);
     mController->console().print(" ");
     index = seg.left.first;
-    while (index <= seg.left.first + mappedHeight)
+    while (index < seg.left.first + mappedHeight)
     {
       mController->ledController->IncreaseBrightness(index++, 255);
     }
@@ -84,7 +82,7 @@ void Spectrum::PerformUpdate()
       mController->ledController->ReduceBrightness(index++, 255);
     }
     index = seg.right.first;
-    while (index >= seg.right.first - mappedHeight)
+    while (index > seg.right.first - mappedHeight)
     {
       mController->ledController->IncreaseBrightness(index--, 255);
     }

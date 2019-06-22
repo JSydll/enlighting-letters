@@ -21,13 +21,6 @@
 
 namespace EnlightingLetters
 {
-
-template <typename value_t>
-value_t clip(const value_t& n, const value_t& lower, const value_t& upper)
-{
-  return std::max(lower, std::min(n, upper));
-}
-
 class LedController final
 {
  public:

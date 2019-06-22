@@ -122,8 +122,8 @@ void LedController::IncreaseBrightness(uint16_t ledIndex, uint8_t amount)
 {
   if (not mHSVApprox.empty())
   {
-    mHSVApprox[ledIndex].value = clip(static_cast<uint8_t>(mHSVApprox[ledIndex].value + amount),
-                                      mHSVApprox[ledIndex].value, static_cast<uint8_t>(255));
+    mHSVApprox[ledIndex].value =
+        (255 - mHSVApprox[ledIndex].value < amount) ? 255 : mHSVApprox[ledIndex].value + amount;
     mLedAccessor[ledIndex] = mHSVApprox[ledIndex];
   }
 }
@@ -132,8 +132,9 @@ void LedController::ReduceBrightness(uint16_t ledIndex, uint8_t amount)
 {
   if (not mHSVApprox.empty())
   {
-    mHSVApprox[ledIndex].value = clip(static_cast<uint8_t>(mHSVApprox[ledIndex].value - amount),
-                                      static_cast<uint8_t>(0), mHSVApprox[ledIndex].value);
+    // Prevent integer overflow
+    mHSVApprox[ledIndex].value =
+        (mHSVApprox[ledIndex].value < amount) ? 0 : mHSVApprox[ledIndex].value - amount;
     mLedAccessor[ledIndex] = mHSVApprox[ledIndex];
   }
 }
