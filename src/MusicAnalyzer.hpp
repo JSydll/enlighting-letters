@@ -44,8 +44,8 @@ class MusicAnalyzer
   // kSampleRate/2 Hz.
   const int kFrequenciesPerBand = kSampleSize / 2 / kFrequencyBands;
 
-  const long kRationalThreshold = 6000;
-  long CalculateAmplitude(std::array<double, 0>::iterator first, int startIndex, int numSamples, long lastValue);
+  long CalculateAmplitude(std::array<double, 0>::iterator first, int startIndex, int numSamples,
+                          long lastValue, long offset);
 };
 
 }  // namespace EnlightingLetters

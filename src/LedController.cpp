@@ -73,8 +73,15 @@ void LedController::CreateRandomPalette(CRGBPalette16& palette)
 }
 
 void LedController::FillFromPalette(uint16_t ledIndex, const CRGBPalette16& palette,
-                                    uint8_t colorIndex)
+                                    uint8_t colorIndex, bool blend)
 {
+  if (not blend)
+  {
+    mLedAccessor[ledIndex] = ((ledIndex > kLastLedStripeOne) and (ledIndex <= kLastLedStripeTwo)
+                                  ? CorrectColor(palette[colorIndex])
+                                  : palette[colorIndex]);
+    return;
+  }
   mLedAccessor[ledIndex] =
       ((ledIndex > kLastLedStripeOne) and (ledIndex <= kLastLedStripeTwo)
            ? CorrectColor(ColorFromPalette(palette, colorIndex, 255, LINEARBLEND))

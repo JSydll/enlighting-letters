@@ -56,7 +56,7 @@ class LedController final
 
   void CreateRandomPalette(CRGBPalette16& palette);
 
-  void FillFromPalette(uint16_t ledIndex, const CRGBPalette16& palette, uint8_t colorIndex);
+  void FillFromPalette(uint16_t ledIndex, const CRGBPalette16& palette, uint8_t colorIndex, bool blend = true);
 
   void FillAllFromPalette(const CRGBPalette16& palette, uint8_t index);
 

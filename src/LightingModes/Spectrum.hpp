@@ -24,10 +24,13 @@ namespace EnlightingLetters
 {
 
 const TProgmemRGBPalette16 MusicSpectrum_p FL_PROGMEM = {
-    CRGB(0, 90, 50),     CRGB(35, 132, 67),  CRGB(35, 132, 67),   CRGB(35, 132, 67),
-    CRGB(65, 171, 93),   CRGB(65, 171, 93),  CRGB(153, 219, 184), CRGB(102, 204, 206),
-    CRGB(153, 219, 184), CRGB(204, 230, 75), CRGB(252, 199, 7),   CRGB(248, 157, 14),
-    CRGB(248, 157, 14),  CRGB(245, 114, 21), CRGB(241, 71, 28),   CRGB(219, 30, 38)};
+    0x005A32, 0x238443, 0x238443, 0x238443, 0x41AB5D, 0x41AB5D, 0x99DBB8, 0x66CCCE,
+    0x99DBB8, 0xCCE64B, 0xFCC707, 0xF89D0E, 0xF89D0E, 0xF57215, 0xF1471C, 0xDB1E26};
+
+const TProgmemRGBPalette16 MusicSpectrum2_p FL_PROGMEM = {
+    CRGB::Green,       CRGB::Green,  CRGB::Green,  CRGB::Green,  CRGB::Green,  CRGB::Green,
+    CRGB::GreenYellow, CRGB::Yellow, CRGB::Yellow, CRGB::Orange, CRGB::Orange, CRGB::Orange,
+    CRGB::OrangeRed,   CRGB::Red,    CRGB::Red,    CRGB::Red};
 
 /**
  * @brief
@@ -49,7 +52,7 @@ class Spectrum final : public ILightingProcessor
 
   void Fill(const CRGBPalette16& palette);
 
-  const std::vector<std::pair<int, int>> kFloor = {{0, 5}, {253, 330}};
+  const std::vector<std::pair<int, int>> kFloor = {{0, 5}, {251, 330}};
 
   struct SegmentControl
   {
@@ -58,14 +61,22 @@ class Spectrum final : public ILightingProcessor
     int height;
   };
 
+  // Segments from left to right
   const std::vector<SegmentControl> kSegments = {
-      {{6, 41}, {77, 42}, 36},     {{78, 80}, {84, 81}, 4},      {{85, 87}, {91, 88}, 4},
-      {{92, 97}, {103, 98}, 6},    {{104, 121}, {140, 122}, 19}, {{141, 150}, {161, 151}, 10},
-      {{162, 168}, {176, 169}, 9}, {{177, 214}, {252, 215}, 38}};
+      {{6, 40}, {76, 41}, 35},     {{77, 81}, {86, 82}, 4},      {{87, 91}, {97, 92}, 5},
+      {{98, 104}, {109, 104}, 5},  {{110, 128}, {147, 129}, 18}, {{148, 155}, {163, 156}, 7},
+      {{164, 171}, {179, 172}, 7}, {{180, 214}, {250, 215}, 35}};
 
-  // To show the frequency values, the maximum values need to be know. The initialization is made as
-  // best guess
-  std::vector<int> mMaxFrequencies = {200, 200, 200, 200, 200, 200, 200, 200};
+  // Frequency bands:
+  // [0] 150Hz - [1] 400Hz [2] 1kHz - [3] 2kHz
+  // [4] 4kHz - [5] 8kHz - [6] 16kz - [7] 20kHz
+  const std::vector<uint8_t> kBandToSegmentMapping = 
+  {
+    3, 6, 2, 7, 4, 0, 5, 1
+  };
+
+  // To show the frequency values, the maximum values need to be known.
+  std::vector<long> mMaxFrequencies = {1, 1, 1, 1, 1, 1, 1, 1};
 };  // namespace EnlightingLetters
 }  // namespace EnlightingLetters
 
