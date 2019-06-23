@@ -66,7 +66,7 @@ class Spectrum final : public ILightingProcessor
   // Frequency bands:
   // [0] 150Hz - [1] 400Hz [2] 1kHz - [3] 2kHz
   // [4] 4kHz - [5] 8kHz - [6] 16kz - [7] 20kHz
-  const std::vector<uint8_t> kBandToSegmentMapping = {3, 6, 2, 5, 4, 0, 7, 1};
+  const std::vector<uint8_t> kBandToSegmentMapping = {3, 0, 2, 5, 6, 7, 4, 1};
 
   // To show the frequency values, the maximum values need to be known.
   std::vector<long> mMaxFrequencies = {1, 1, 1, 1, 1, 1, 1, 1};

@@ -65,13 +65,11 @@ void Spectrum::PerformUpdate()
     {
       mMaxFrequencies[freqNum] = currentValue;
     }
-    else if(mMaxFrequencies[freqNum] != 1 and resetCycle++ % 8 == 0)
+    else if(mMaxFrequencies[freqNum] != 1 and resetCycle++ % 4 == 0)
     {
       mMaxFrequencies[freqNum]--;
     }
     mappedHeight = map(currentValue, 0, mMaxFrequencies[freqNum], 0, seg.height);
-    mController->console().print(mappedHeight);
-    mController->console().print(" ");
     index = seg.left.first;
     while (index < seg.left.first + mappedHeight)
     {
@@ -91,10 +89,9 @@ void Spectrum::PerformUpdate()
       mController->ledController->ReduceBrightness(index--, 255);
     }
   }
-  mController->console().println();
   FastLED.show();
 }
 
-int Spectrum::GetStepsPerAnimation() { return 1; }
+int Spectrum::GetStepsPerAnimation() { return 2; }
 
 }  // namespace EnlightingLetters

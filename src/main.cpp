@@ -15,14 +15,7 @@ void setup()
 {
   using namespace EnlightingLetters;
   globalController->Init();
-
   globalController->console().println("#### Starting enlighting letters ####");
-  delay(2000);
-  /*CRGBPalette16 palette = RainbowColors_p;
-  palette[0] = CRGB::Black;
-  palette[1] = CRGB::Black;
-  GlobalController->mLightingProcessor = std::make_shared<Snake>(ledController, palette);*/
-  // globalController->lightingProcessor = std::make_shared<Rain>(ledController);
 }
 
 void loop()
