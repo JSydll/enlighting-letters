@@ -47,21 +47,11 @@ void LedController::FillAllWithColor(CRGB color)
   }
 }
 
-void LedController::FillAllWithColor(GlobalController::LightingColor& color)
-{
-  FillAllWithColor(Convert(color));
-}
-
 void LedController::FillWithColor(uint16_t ledIndex, CRGB color)
 {
   mLedAccessor[ledIndex] =
       ((ledIndex > kLastLedStripeOne) and (ledIndex <= kLastLedStripeTwo) ? CorrectColor(color)
                                                                           : color);
-}
-
-void LedController::FillWithColor(uint16_t ledIndex, GlobalController::LightingColor color)
-{
-  FillWithColor(ledIndex, Convert(color));
 }
 
 void LedController::CreateRandomPalette(CRGBPalette16& palette)
@@ -143,24 +133,6 @@ LedController::LedController(std::shared_ptr<GlobalController>& state) : mGlobal
 {
   FastLED.addLeds<WS2812B, kLedPin>(mLedAccessor, kTotalLedCount).setCorrection(TypicalLEDStrip);
   FastLED.setBrightness(kBrightness);
-}
-
-CRGB LedController::Convert(const GlobalController::LightingColor& color)
-{
-  using lc = GlobalController::LightingColor;
-  switch (color)
-  {
-    case lc::RED: return CRGB::Red;
-    case lc::YELLOW: return CRGB::Yellow;
-    case lc::ORANGE: return CRGB::Orange;
-    case lc::GREEN: return CRGB::Green;
-    case lc::BLUE: return CRGB::Blue;
-    case lc::VIOLET: return CRGB::Violet;
-    case lc::PINK: return CRGB::Pink;
-    case lc::BLACK: return CRGB::Black;
-    default:;
-  }
-  return CRGB::White;
 }
 
 CRGB LedController::CorrectColor(CRGB colorIn)

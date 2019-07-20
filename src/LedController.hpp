@@ -12,9 +12,9 @@
 #define LEDCONTROLLER_HPP
 
 #include <FastLED.h>
+#include <math.h>
 #include <chrono>
 #include <memory>
-#include <math.h>
 
 #include "GlobalController.hpp"
 #include "ILightingProcessor.hpp"
@@ -25,7 +25,7 @@ class LedController final
 {
  public:
   const static uint8_t kLedPin = 12;
-  const static uint8_t kBrightness = 100;
+  const static uint8_t kBrightness = 150;
   const static int kTotalLedCount = 331;
   const static int kLastLedStripeOne = 149;
   const static int kLastLedStripeTwo = 209;
@@ -41,15 +41,12 @@ class LedController final
 
   void FillWithColor(uint16_t ledIndex, CRGB color);
 
-  void FillWithColor(uint16_t ledIndex, GlobalController::LightingColor color);
-
   void FillAllWithColor(CRGB color);
-
-  void FillAllWithColor(GlobalController::LightingColor& color);
 
   void CreateRandomPalette(CRGBPalette16& palette);
 
-  void FillFromPalette(uint16_t ledIndex, const CRGBPalette16& palette, uint8_t colorIndex, bool blend = true);
+  void FillFromPalette(uint16_t ledIndex, const CRGBPalette16& palette, uint8_t colorIndex,
+                       bool blend = true);
 
   void FillAllFromPalette(const CRGBPalette16& palette, uint8_t index);
 
@@ -70,8 +67,6 @@ class LedController final
   std::vector<CHSV> mHSVApprox;
 
   LedController(std::shared_ptr<GlobalController>& state);
-
-  CRGB Convert(const GlobalController::LightingColor& color);
 
   CRGB CorrectColor(CRGB colorIn);
 };

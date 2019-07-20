@@ -16,7 +16,7 @@ void Pulse::PerformUpdate()
   else if (mCurrentBrightness == 0)
   {
     mIsAscending = true;
-    if (mGlobalController->data.mColor != GlobalController::LightingColor::RANDOM)
+    if (mGlobalController->data.mColor != 0xFFFFFF)
     {
       mController->FillAllWithColor(mGlobalController->data.mColor);
     }

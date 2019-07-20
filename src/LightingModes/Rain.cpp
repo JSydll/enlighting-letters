@@ -69,6 +69,6 @@ void Rain::PerformUpdate()
   FastLED.show();
 }
 
-int Rain::GetStepsPerAnimation() { return 400; }
+int Rain::GetStepsPerAnimation() { return 200; }
 
 }  // namespace EnlightingLetters

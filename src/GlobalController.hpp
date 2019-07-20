@@ -42,30 +42,20 @@ class GlobalController : public std::enable_shared_from_this<GlobalController>
     GLOW = 0,
     PULSE = 1,
     SNAKE = 2,
-    RAIN = 3,
-    SPECTRUM = 4
-  };
-  enum class LightingColor : uint8_t
-  {
-    RANDOM = 0,
-    RED = 1,
-    GREEN = 2,
-    YELLOW = 3,
-    ORANGE = 4,
-    BLUE = 5,
-    VIOLET = 6,
-    PINK = 7,
-    WHITE = 8,
-    BLACK = 9
+    CHASER = 3,
+    RAIN = 4,
+    SPECTRUM = 5
   };
 
   struct GlobalData
   {
-    LightingMode mMode = LightingMode::PULSE;      // Currently active mode
-    LightingColor mColor = LightingColor::RANDOM;  // Currently active color
+    LightingMode mMode = LightingMode::PULSE;  // Active mode
+    int mColor = 0xFFFFFF;                     // Active color, black being the respective default
     int mAnimationSpeed = 2000;  // Number of milliseconds, one full animation cycle should take
+    bool mMusicActive = false;
     std::vector<long> mFrequencies;
   } data;
+
  private:
   GlobalController() = default;
 };

@@ -1,5 +1,8 @@
 #include "CommandInterface.hpp"
 
+#include <cstdlib>
+
+#include "LightingModes/Chaser.hpp"
 #include "LightingModes/Glow.hpp"
 #include "LightingModes/Pulse.hpp"
 #include "LightingModes/Rain.hpp"
@@ -31,45 +34,73 @@ void CommandInterface::Update()
   {
     auto cmd = mCommandQueue.front();
     mCommandQueue.pop();
-    switch (hash(cmd.c_str()))
+    auto splitPos = cmd.find(":");
+    auto key = cmd.substr(0, splitPos);
+    auto val = cmd.substr(splitPos + 1, cmd.size());
+    switch (hash(key.c_str()))
     {
-      case hash("mode:spectrum"):
-        if (mGlobalController->data.mMode != GlobalController::LightingMode::SPECTRUM)
+      case hash("mode"): mGlobalController->data.mMusicActive = (val == "music"); break;
+      case hash("visu"):
+        switch (hash(val.c_str()))
         {
-          mGlobalController->data.mMode = GlobalController::LightingMode::SPECTRUM;
-          mGlobalController->lightingProcessor = std::make_shared<Spectrum>(mGlobalController);
+          case hash("spectrum"):
+            if (mGlobalController->data.mMode != GlobalController::LightingMode::SPECTRUM)
+            {
+              mGlobalController->data.mMode = GlobalController::LightingMode::SPECTRUM;
+              mGlobalController->lightingProcessor = std::make_shared<Spectrum>(mGlobalController);
+            }
+            break;
+          case hash("glow"):
+            if (mGlobalController->data.mMode != GlobalController::LightingMode::GLOW)
+            {
+              mGlobalController->data.mMode = GlobalController::LightingMode::GLOW;
+              mGlobalController->lightingProcessor =
+                  std::make_shared<Glow>(mGlobalController->ledController);
+            }
+            break;
+          case hash("pulse"):
+            if (mGlobalController->data.mMode != GlobalController::LightingMode::PULSE)
+            {
+              mGlobalController->data.mMode = GlobalController::LightingMode::PULSE;
+              mGlobalController->lightingProcessor =
+                  std::make_shared<Pulse>(mGlobalController, mGlobalController->ledController);
+            }
+            break;
+          case hash("snake"):
+            if (mGlobalController->data.mMode != GlobalController::LightingMode::SNAKE)
+            {
+              mGlobalController->data.mMode = GlobalController::LightingMode::SNAKE;
+              mGlobalController->lightingProcessor =
+                  std::make_shared<Snake>(mGlobalController->ledController);
+            }
+            break;
+          case hash("visu:chaser"):
+            if (mGlobalController->data.mMode != GlobalController::LightingMode::CHASER)
+            {
+              mGlobalController->data.mMode = GlobalController::LightingMode::CHASER;
+              mGlobalController->lightingProcessor =
+                  std::make_shared<Chaser>(mGlobalController->ledController);
+            }
+            break;
+          case hash("rain"):
+            if (mGlobalController->data.mMode != GlobalController::LightingMode::RAIN)
+            {
+              mGlobalController->data.mMode = GlobalController::LightingMode::RAIN;
+              mGlobalController->lightingProcessor =
+                  std::make_shared<Rain>(mGlobalController->ledController);
+            }
+            break;
+          default: break;
         }
         break;
-      case hash("mode:glow"):
-        if (mGlobalController->data.mMode != GlobalController::LightingMode::GLOW)
+      case hash("color"):
+        if (val == "default")
         {
-          mGlobalController->data.mMode = GlobalController::LightingMode::GLOW;
-          mGlobalController->lightingProcessor =
-              std::make_shared<Glow>(mGlobalController->ledController);
+          mGlobalController->data.mColor = 0xFFFFFF;
         }
-        break;
-      case hash("mode:pulse"):
-        if (mGlobalController->data.mMode != GlobalController::LightingMode::PULSE)
+        else
         {
-          mGlobalController->data.mMode = GlobalController::LightingMode::PULSE;
-          mGlobalController->lightingProcessor =
-              std::make_shared<Pulse>(mGlobalController, mGlobalController->ledController);
-        }
-        break;
-      case hash("mode:snake"):
-        if (mGlobalController->data.mMode != GlobalController::LightingMode::SNAKE)
-        {
-          mGlobalController->data.mMode = GlobalController::LightingMode::SNAKE;
-          mGlobalController->lightingProcessor =
-              std::make_shared<Snake>(mGlobalController->ledController);
-        }
-        break;
-      case hash("mode:rain"):
-        if (mGlobalController->data.mMode != GlobalController::LightingMode::RAIN)
-        {
-          mGlobalController->data.mMode = GlobalController::LightingMode::RAIN;
-          mGlobalController->lightingProcessor =
-              std::make_shared<Rain>(mGlobalController->ledController);
+          mGlobalController->data.mColor = (int)strtol(val.c_str(), NULL, 16);
         }
         break;
       default: continue;
