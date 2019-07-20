@@ -51,9 +51,11 @@ class GlobalController : public std::enable_shared_from_this<GlobalController>
   {
     LightingMode mMode = LightingMode::PULSE;  // Active mode
     int mColor = 0xFFFFFF;                     // Active color, black being the respective default
-    int mAnimationSpeed = 2000;  // Number of milliseconds, one full animation cycle should take
+    int mAnimationSpeed = 1600;  // Number of milliseconds one full animation cycle should take
     bool mMusicActive = false;
     std::vector<long> mFrequencies;
+    std::vector<long> mMaxFrequencies = {1, 1, 1, 1, 1, 1, 1, 1};
+    bool mHasBeat = false;
   } data;
 
  private:

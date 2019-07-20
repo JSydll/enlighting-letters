@@ -52,24 +52,14 @@ void Spectrum::Fill(const CRGBPalette16& palette)
 void Spectrum::PerformUpdate()
 {
   static int freqNum = 0;
-  static long currentValue = 0;
   static int mappedHeight = 0;
   static int index = 0;
-  static uint8_t resetCycle = 0;
   // For each frequency band calculate fill height
   for (freqNum = 0; freqNum < mController->data.mFrequencies.size(); ++freqNum)
   {
     auto& seg = kSegments[kBandToSegmentMapping[freqNum]];
-    currentValue = mController->data.mFrequencies[freqNum];
-    if(currentValue > mMaxFrequencies[freqNum])
-    {
-      mMaxFrequencies[freqNum] = currentValue;
-    }
-    else if(mMaxFrequencies[freqNum] != 1 and resetCycle++ % 4 == 0)
-    {
-      mMaxFrequencies[freqNum]--;
-    }
-    mappedHeight = map(currentValue, 0, mMaxFrequencies[freqNum], 0, seg.height);
+    mappedHeight = map(mController->data.mFrequencies[freqNum], 0,
+                       mController->data.mMaxFrequencies[freqNum], 0, seg.height);
     index = seg.left.first;
     while (index < seg.left.first + mappedHeight)
     {

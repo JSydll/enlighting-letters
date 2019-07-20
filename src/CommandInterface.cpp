@@ -79,7 +79,7 @@ void CommandInterface::Update()
             {
               mGlobalController->data.mMode = GlobalController::LightingMode::CHASER;
               mGlobalController->lightingProcessor =
-                  std::make_shared<Chaser>(mGlobalController->ledController);
+                  std::make_shared<Chaser>(mGlobalController, mGlobalController->ledController);
             }
             break;
           case hash("rain"):
@@ -101,6 +101,13 @@ void CommandInterface::Update()
         else
         {
           mGlobalController->data.mColor = (int)strtol(val.c_str(), NULL, 16);
+          // Some lighting modes need to be restarted to respect new color
+          if (mGlobalController->data.mMode == GlobalController::LightingMode::CHASER)
+          {
+            CRGBPalette16 singleFillPalette(CRGB(mGlobalController->data.mColor));
+            mGlobalController->lightingProcessor = std::make_shared<Chaser>(
+                mGlobalController, mGlobalController->ledController, singleFillPalette);
+          }
         }
         break;
       default: continue;

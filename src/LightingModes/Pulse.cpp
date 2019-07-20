@@ -9,23 +9,7 @@ Pulse::Pulse(std::shared_ptr<GlobalController> state, std::shared_ptr<LedControl
 
 void Pulse::PerformUpdate()
 {
-  if (mCurrentBrightness == mController->kBrightness)
-  {
-    mIsAscending = false;
-  }
-  else if (mCurrentBrightness == 0)
-  {
-    mIsAscending = true;
-    if (mGlobalController->data.mColor != 0xFFFFFF)
-    {
-      mController->FillAllWithColor(mGlobalController->data.mColor);
-    }
-    else
-    {
-      mCurrentHue += 5;
-      mController->FillAllWithColor(CHSV(mCurrentHue, 255, 255));
-    }
-  }
+  (mGlobalController->data.mMusicActive ? PrepareMusicMode() : PrepareStaticMode());
   mCurrentBrightness = (mIsAscending ? mCurrentBrightness + 5 : mCurrentBrightness - 5);
   FastLED.show(mCurrentBrightness);
 }
@@ -35,6 +19,34 @@ int Pulse::GetStepsPerAnimation()
   // The brightness increases in steps of 5 and decreases in steps of 5, from 0 to 255 and back.
   // So totally, we have around 50 steps per animation
   return 50;
+}
+
+void Pulse::PrepareMusicMode()
+{
+  if (mGlobalController->data.mHasBeat)
+  {
+    mIsAscending != mIsAscending;
+  }
+}
+
+void Pulse::PrepareStaticMode()
+{
+  if (mCurrentBrightness == mController->kBrightness)
+  {
+    mIsAscending = false;
+    return;
+  }
+  if (mCurrentBrightness == 0)
+  {
+    mIsAscending = true;
+    if (mGlobalController->data.mColor != 0xFFFFFF)
+    {
+      mController->FillAllWithColor(mGlobalController->data.mColor);
+      return;
+    }
+    mCurrentHue += 5;
+    mController->FillAllWithColor(CHSV(mCurrentHue, 255, 255));
+  }
 }
 
 }  // namespace EnlightingLetters

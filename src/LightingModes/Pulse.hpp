@@ -39,6 +39,10 @@ class Pulse final : public ILightingProcessor
   bool mIsAscending = true;
   uint8_t mCurrentHue = 0;
   uint8_t mCurrentBrightness = 0;
+
+  void PrepareMusicMode();
+
+  void PrepareStaticMode();
 };
 }  // namespace EnlightingLetters
 

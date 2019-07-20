@@ -22,7 +22,8 @@ long MusicAnalyzer::CalculateAmplitude(std::array<double, 0>::iterator first, in
   long val = (numSamples == 1 ? static_cast<long>(*(first + startIndex))
                               : (static_cast<long>(std::accumulate(
                                      first + startIndex, first + startIndex + numSamples, 0.0)) /
-                                 numSamples)) - offset;
+                                 numSamples)) -
+             offset;
   // Employ TP filter with beta = 2
   return (val + (lastValue << 2) - lastValue) >> 2;
 }
@@ -53,11 +54,29 @@ void MusicAnalyzer::Update()
   static const std::vector<long> kOffsets = {81500, 150, 60, 40, 40, 40, 40, 10};
   static const std::vector<std::pair<int, int>> mFreqRanges = {
       {1, 1}, {2, 3}, {5, 4}, {9, 7}, {16, 20}, {36, 44}, {80, 36}, {116, 12}};
+  static long currentValue = 0;
+  static uint8_t resetCycle = 0;
   for (num = 0; num < mGlobalController->data.mFrequencies.size(); ++num)
   {
-    mGlobalController->data.mFrequencies[num] =
-        CalculateAmplitude(real.begin(), mFreqRanges[num].first, mFreqRanges[num].second,
-                           mGlobalController->data.mFrequencies[num], kOffsets[num]);
+    currentValue = CalculateAmplitude(real.begin(), mFreqRanges[num].first, mFreqRanges[num].second,
+                                      mGlobalController->data.mFrequencies[num], kOffsets[num]);
+    mGlobalController->data.mFrequencies[num] = currentValue;
+    if (currentValue > mGlobalController->data.mMaxFrequencies[num])
+    {
+      mGlobalController->data.mMaxFrequencies[num] = currentValue;
+      continue;
+    }
+    if (resetCycle++ % 4 == 0)
+    {
+      mGlobalController->data.mMaxFrequencies[num]--;
+    }
   }
+  // Beat detection
+  static bool currentPeak = false;
+  static bool lastPeak = false;
+  currentPeak = mGlobalController->data.mFrequencies[kBpmFrequency] >
+                0.8 * mGlobalController->data.mMaxFrequencies[kBpmFrequency];
+  mGlobalController->data.mHasBeat = (currentPeak and not lastPeak);
+  lastPeak = currentPeak;
 }
 }  // namespace EnlightingLetters

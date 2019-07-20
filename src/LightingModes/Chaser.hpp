@@ -13,8 +13,8 @@
 
 #include <memory>
 
-#include "../LedController.hpp"
 #include "../ILightingProcessor.hpp"
+#include "../LedController.hpp"
 
 namespace EnlightingLetters
 {
@@ -25,7 +25,8 @@ namespace EnlightingLetters
 class Chaser final : public ILightingProcessor
 {
  public:
-  Chaser(std::shared_ptr<LedController> controller, CRGBPalette16 palette = CRGBPalette16(RainbowColors_p));
+  Chaser(std::shared_ptr<GlobalController> state, std::shared_ptr<LedController> controller,
+         CRGBPalette16 palette = CRGBPalette16(RainbowColors_p));
   virtual ~Chaser() = default;
 
   virtual void PerformUpdate() override;
@@ -33,6 +34,7 @@ class Chaser final : public ILightingProcessor
   virtual int GetStepsPerAnimation() override;
 
  private:
+  std::shared_ptr<GlobalController> mState;
   std::shared_ptr<LedController> mController;
   CRGBPalette16 mColorPalette;
   uint8_t mCurrentStartColorIndex = 0;

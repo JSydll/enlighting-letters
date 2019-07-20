@@ -40,6 +40,7 @@ class MusicAnalyzer
   const uint16_t kSampleRate = 40000;
   const int kMicrosBetweenSamples = 1000000 / kSampleRate;
   const uint8_t kFrequencyBands = 8;
+  const int kBpmFrequency = 3;
   // According to Nyquist-Theorem, only half of the samples represents the freq. from 0 to
   // kSampleRate/2 Hz.
   const int kFrequenciesPerBand = kSampleSize / 2 / kFrequencyBands;
