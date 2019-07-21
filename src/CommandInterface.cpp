@@ -74,7 +74,7 @@ void CommandInterface::Update()
                   std::make_shared<Snake>(mGlobalController->ledController);
             }
             break;
-          case hash("visu:chaser"):
+          case hash("chaser"):
             if (mGlobalController->data.mMode != GlobalController::LightingMode::CHASER)
             {
               mGlobalController->data.mMode = GlobalController::LightingMode::CHASER;
