@@ -31,7 +31,7 @@ void Pulse::PrepareMusicMode()
 
 void Pulse::PrepareStaticMode()
 {
-  if (mCurrentBrightness == mController->kBrightness)
+  if (mCurrentBrightness == mController->mBrightness)
   {
     mIsAscending = false;
     return;
@@ -39,7 +39,7 @@ void Pulse::PrepareStaticMode()
   if (mCurrentBrightness == 0)
   {
     mIsAscending = true;
-    if (mGlobalController->data.mColor != 0xFFFFFF)
+    if (mGlobalController->data.mColor != 0x000000)
     {
       mController->FillAllWithColor(mGlobalController->data.mColor);
       return;

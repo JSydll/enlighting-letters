@@ -96,10 +96,11 @@ void CommandInterface::Update()
       case hash("color"):
         if (val == "default")
         {
-          mGlobalController->data.mColor = 0xFFFFFF;
+          mGlobalController->data.mColor = 0x000000;
         }
         else
         {
+          val.erase(0, 1);
           mGlobalController->data.mColor = (int)strtol(val.c_str(), NULL, 16);
           // Some lighting modes need to be restarted to respect new color
           if (mGlobalController->data.mMode == GlobalController::LightingMode::CHASER)
@@ -110,6 +111,17 @@ void CommandInterface::Update()
           }
         }
         break;
+      case hash("bright"):
+      {
+        mGlobalController->ledController->SetTotalBrightness(strtol(val.c_str(), NULL, 10));
+        // Some lighting modes need to be restarted to work properly with the new brightness
+        if (mGlobalController->data.mMode == GlobalController::LightingMode::PULSE)
+        {
+          mGlobalController->lightingProcessor =
+              std::make_shared<Pulse>(mGlobalController, mGlobalController->ledController);
+        }
+      }
+      break;
       default: continue;
     }
   }

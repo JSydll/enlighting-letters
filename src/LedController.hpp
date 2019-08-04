@@ -25,11 +25,12 @@ class LedController final
 {
  public:
   const static uint8_t kLedPin = 12;
-  const static uint8_t kBrightness = 150;
   const static int kTotalLedCount = 331;
   const static int kLastLedStripeOne = 149;
   const static int kLastLedStripeTwo = 209;
   const static int kLastLedStripeThree = 330;
+  // Initial brightness
+  uint8_t mBrightness = 150;
 
   static std::shared_ptr<LedController> Create(std::shared_ptr<GlobalController> state);
 
@@ -38,6 +39,8 @@ class LedController final
   void Update();
 
   void SetAnimationSpeed();
+
+  void SetTotalBrightness(int brightness);
 
   void FillWithColor(uint16_t ledIndex, CRGB color);
 

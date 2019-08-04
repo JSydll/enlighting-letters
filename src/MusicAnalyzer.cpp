@@ -66,7 +66,8 @@ void MusicAnalyzer::Update()
       mGlobalController->data.mMaxFrequencies[num] = currentValue;
       continue;
     }
-    if (resetCycle++ % 4 == 0)
+    // mMaxFrequencies must be greater than 0 to prevent IntergerDividedByZero crashes.
+    if (resetCycle++ % 4 == 0 and mGlobalController->data.mMaxFrequencies[num] > 1)
     {
       mGlobalController->data.mMaxFrequencies[num]--;
     }

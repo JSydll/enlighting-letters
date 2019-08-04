@@ -30,6 +30,13 @@ void LedController::SetAnimationSpeed()
   }
 }
 
+void LedController::SetTotalBrightness(int brightness)
+{
+  mBrightness = brightness;
+  FastLED.setBrightness(brightness);
+  FastLED.show();
+}
+
 void LedController::FillAllWithColor(CRGB color)
 {
   int i = 0;
@@ -132,7 +139,7 @@ void LedController::ReduceBrightness(uint16_t ledIndex, uint8_t amount)
 LedController::LedController(std::shared_ptr<GlobalController>& state) : mGlobalController(state)
 {
   FastLED.addLeds<WS2812B, kLedPin>(mLedAccessor, kTotalLedCount).setCorrection(TypicalLEDStrip);
-  FastLED.setBrightness(kBrightness);
+  FastLED.setBrightness(mBrightness);
 }
 
 CRGB LedController::CorrectColor(CRGB colorIn)
