@@ -27,7 +27,7 @@ void Spectrum::Fill(const CRGBPalette16& palette)
     }
   }
   // Fill bands but don't show them
-  for (const auto& band : kSegments)
+  for (const auto& band : kChannels)
   {
     auto lLower = band.left.first;
     auto lUpper = band.left.second;
@@ -57,7 +57,7 @@ void Spectrum::PerformUpdate()
   // For each frequency band calculate fill height
   for (freqNum = 0; freqNum < mController->data.mFrequencies.size(); ++freqNum)
   {
-    auto& seg = kSegments[kBandToSegmentMapping[freqNum]];
+    auto& seg = kChannels[kBandToChannelMapping[freqNum]];
     mappedHeight = map(mController->data.mFrequencies[freqNum], 0,
                        mController->data.mMaxFrequencies[freqNum], 0, seg.height);
     index = seg.left.first;

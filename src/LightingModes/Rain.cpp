@@ -18,47 +18,49 @@ void Rain::PerformUpdate()
   static int16_t endIndex = 0;
   static int8_t animationIndex = 0;
   // Animate rain drops
-  for (auto& seg : mSegmentControls)
+  for (auto& control : mSegmentControls)
   {
-    if (not seg.mActiveSegment)
+    if (not control.active)
     {
-      seg.mActiveSegment = (std::rand() % 1000 + 1) < 20;
+      control.active = (esp_random() % 1000 + 1) < 20;
       continue;
     }
-    if (not seg.mIsReverse)
+    if (not control.reverse)
     {
-      startIndex = std::min(seg.mEnd, std::max(seg.mVirtualBegin, seg.mBegin));
+      startIndex = std::min(control.seg.end, std::max(control.index, control.seg.begin));
       firstModifiedLed = startIndex;
-      endIndex = std::min(seg.mEnd, std::max(seg.mVirtualBegin + kAnimationSize, seg.mBegin));
+      endIndex =
+          std::min(control.seg.end, std::max(control.index + kAnimationSize, control.seg.begin));
       for (animationIndex = 0; startIndex < endIndex; animationIndex++)
       {
         mController->FillWithColor(startIndex++, CHSV(255, 0, kAnimationPane[animationIndex]));
       }
-      seg.mVirtualBegin++;
+      control.index++;
     }
     else
     {
-      startIndex = std::min(seg.mBegin, std::max(seg.mVirtualBegin, seg.mEnd));
+      startIndex = std::min(control.seg.begin, std::max(control.index, control.seg.end));
       firstModifiedLed = startIndex;
-      endIndex = std::min(seg.mBegin, std::max(seg.mVirtualBegin - kAnimationSize, seg.mEnd));
+      endIndex =
+          std::min(control.seg.begin, std::max(control.index - kAnimationSize, control.seg.end));
       for (animationIndex = 0; startIndex > endIndex; animationIndex++)
       {
         mController->FillWithColor(startIndex--, CHSV(255, 0, kAnimationPane[animationIndex]));
       }
-      seg.mVirtualBegin--;
+      control.index--;
     }
     FastLED.show();
     mController->FillWithColor(firstModifiedLed, CRGB::Black);
-    if (seg.mVirtualBegin == seg.mEnd)
+    if (control.index == control.seg.end)
     {
-      seg.mVirtualBegin =
-          (seg.mIsReverse ? seg.mBegin + kAnimationSize : seg.mBegin - kAnimationSize);
-      seg.mActiveSegment = false;
+      control.index = (control.reverse ? control.seg.begin + kAnimationSize
+                                       : control.seg.begin - kAnimationSize);
+      control.active = false;
     }
   }
   // Animate drops on the floor
-  mFloorDropFlags |= (1 << (std::rand() % 128));
-  mFloorDropFlags &= ~((1 << (std::rand() % 64)) | (1 << (std::rand() % 64)));
+  mFloorDropFlags |= (1 << (esp_random() % 128));
+  mFloorDropFlags &= ~((1 << (esp_random() % 64)) | (1 << (esp_random() % 64)));
   static uint8_t index = 0;
   for (index = 0; index < 39; index++)
   {

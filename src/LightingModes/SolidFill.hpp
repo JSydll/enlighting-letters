@@ -15,7 +15,6 @@
 
 #include "../GlobalController.hpp"
 #include "../ILightingProcessor.hpp"
-#include "../LedController.hpp"
 
 namespace EnlightingLetters
 {

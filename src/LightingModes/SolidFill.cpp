@@ -1,5 +1,7 @@
 #include "SolidFill.hpp"
 
+#include "../LedController.hpp"
+
 namespace EnlightingLetters
 {
 

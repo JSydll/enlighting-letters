@@ -38,23 +38,15 @@ class Rain final : public ILightingProcessor
  private:
   std::shared_ptr<LedController> mController;
 
-  struct SegmentControl
-  {
-    bool mActiveSegment;
-    bool mIsReverse;
-    int mBegin;
-    int mEnd;
-    int mVirtualBegin;
-  };
   const std::array<uint8_t, 16> kAnimationPane{
       {10, 30, 80, 120, 180, 255, 255, 255, 255, 255, 255, 180, 120, 80, 30, 10}};
   const int kAnimationSize = static_cast<int>(kAnimationPane.size());
-  std::vector<SegmentControl> mSegmentControls = {{true, true, 37, 0, 37 + kAnimationSize},
-                                                  {false, false, 45, 78, 45 - kAnimationSize},
-                                                  {false, true, 132, 109, 132 + kAnimationSize},
-                                                  {true, false, 131, 150, 131 - kAnimationSize},
-                                                  {false, true, 211, 178, 211 + kAnimationSize},
-                                                  {false, false, 219, 252, 219 - kAnimationSize}};
+  std::vector<SegmentControl> mSegmentControls = {{true, true, {37, 0}, 37 + kAnimationSize},
+                                                  {false, false, {45, 78}, 45 - kAnimationSize},
+                                                  {false, true, {132, 109}, 132 + kAnimationSize},
+                                                  {true, false, {131, 150}, 131 - kAnimationSize},
+                                                  {false, true, {211, 178}, 211 + kAnimationSize},
+                                                  {false, false, {219, 252}, 219 - kAnimationSize}};
 
   const int kFloorBegin = 254;
   uint64_t mFloorDropFlags = 0;

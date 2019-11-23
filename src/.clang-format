@@ -21,12 +21,6 @@ BraceWrapping:
   BeforeCatch: true
   BeforeElse: true
   IndentBraces: false
-  SplitEmptyFunction: true
-  SplitEmptyRecord: false
-  SplitEmptyNamespace: true
-
-  # Keeps extern "C" blocks unindented.
-  AfterExternBlock: false
 
 IndentCaseLabels: true
 
@@ -40,5 +34,3 @@ AccessModifierOffset: -1
 AllowShortCaseLabelsOnASingleLine: true
 
 KeepEmptyLinesAtTheStartOfBlocks: true
-
-IndentPPDirectives: AfterHash

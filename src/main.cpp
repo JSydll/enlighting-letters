@@ -23,9 +23,13 @@ void loop()
   using namespace EnlightingLetters;
   // Command interface
   globalController->commandInterface->Update();
-  // Get input
-  globalController->musicAnalyzer->Update();
-
+  // As the analysis is expensive, only do it when needed
+  if(globalController->data.mMusicActive)
+  {
+    // Get input
+    globalController->musicAnalyzer->Update();
+  }
+  
   // Process and generate output
   globalController->ledController->Update();
 }

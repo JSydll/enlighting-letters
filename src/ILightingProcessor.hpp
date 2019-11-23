@@ -23,6 +23,20 @@ class ILightingProcessor
   virtual void PerformUpdate() = 0;
 
   virtual int GetStepsPerAnimation() = 0;
+
+  struct Segment
+  {
+    int begin;
+    int end;
+  };
+
+  struct SegmentControl
+  {
+    bool active;
+    bool reverse;
+    Segment seg;
+    int index;
+  };
 };
 
 }  // namespace EnlightingLetters

@@ -25,10 +25,10 @@ class LedController final
 {
  public:
   const static uint8_t kLedPin = 12;
-  const static int kTotalLedCount = 331;
+  const static int kTotalLedCount = 332;
   const static int kLastLedStripeOne = 149;
   const static int kLastLedStripeTwo = 209;
-  const static int kLastLedStripeThree = 330;
+  const static int kLastLedStripeThree = 331;
   // Initial brightness
   uint8_t mBrightness = 50;
 
