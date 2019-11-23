@@ -26,7 +26,7 @@ namespace EnlightingLetters
 class SolidFill final : public ILightingProcessor
 {
  public:
-  SolidFill(std::shared_ptr<GlobalController> state, int color);
+  SolidFill(std::shared_ptr<GlobalController> state);
   virtual ~SolidFill() = default;
 
   virtual void PerformUpdate() override;

@@ -30,7 +30,7 @@ class LedController final
   const static int kLastLedStripeTwo = 209;
   const static int kLastLedStripeThree = 330;
   // Initial brightness
-  uint8_t mBrightness = 150;
+  uint8_t mBrightness = 50;
 
   static std::shared_ptr<LedController> Create(std::shared_ptr<GlobalController> state);
 

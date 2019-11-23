@@ -3,8 +3,9 @@
 namespace EnlightingLetters
 {
 
-SolidFill::SolidFill(std::shared_ptr<GlobalController> state, int color) : mGlobalController(state), mCurrentColor(color)
+SolidFill::SolidFill(std::shared_ptr<GlobalController> state) : mGlobalController(state)
 {
+  mCurrentColor = 0x000000;
 }
 
 void SolidFill::PerformUpdate()

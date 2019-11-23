@@ -52,7 +52,7 @@ class GlobalController : public std::enable_shared_from_this<GlobalController>
   struct GlobalData
   {
     LightingMode mMode = LightingMode::SOLID;  // Active mode
-    int mColor = 0xFF6717;                     // Active color, warm white being the respective default (R:255 G:103 B:23)
+    int mColor = 0xFFC850;                     // Active color, warm white being the respective default (255, 200, 80)
     int mAnimationSpeed = 1600;  // Number of milliseconds one full animation cycle should take
     bool mMusicActive = false;
     std::vector<long> mFrequencies;
