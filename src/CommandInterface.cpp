@@ -2,6 +2,8 @@
 
 #include <cstdlib>
 
+#include "LightingModes/SolidFill.hpp"
+#include "LightingModes/Fire.hpp"
 #include "LightingModes/Chaser.hpp"
 #include "LightingModes/Glow.hpp"
 #include "LightingModes/Pulse.hpp"
@@ -26,6 +28,28 @@ namespace
 {
 uint64_t constexpr mix(char m, uint64_t s) { return ((s << 7) + ~(s >> 3)) + ~m; }
 uint64_t constexpr hash(const char* m) { return (*m) ? mix(*m, hash(m + 1)) : 0; }
+
+struct KeyValue
+{
+  std::string key;
+  std::string val;
+};
+KeyValue ExtractKV(const std::string &cmd)
+{
+  auto splitPos = cmd.find(":");
+  return {cmd.substr(0, splitPos), cmd.substr(splitPos + 1, cmd.size())};
+}
+
+int ExtractColor(std::string& value)
+{
+  value.erase(0, 1);
+  return static_cast<int>(strtol(value.c_str(), NULL, 16));
+}
+
+int ExtractBrightness(std::string& value)
+{
+  return static_cast<int>(strtol(value.c_str(), NULL, 10));
+}
 }  // namespace
 
 void CommandInterface::Update()
@@ -34,74 +58,58 @@ void CommandInterface::Update()
   {
     auto cmd = mCommandQueue.front();
     mCommandQueue.pop();
-    auto splitPos = cmd.find(":");
-    auto key = cmd.substr(0, splitPos);
-    auto val = cmd.substr(splitPos + 1, cmd.size());
-    switch (hash(key.c_str()))
+    auto kv = ExtractKV(cmd);
+    switch (hash(kv.key.c_str()))
     {
-      case hash("mode"): mGlobalController->data.mMusicActive = (val == "music"); break;
-      case hash("visu"):
-        switch (hash(val.c_str()))
+      case hash("mode"):
+      {
+        mGlobalController->data.mMusicActive = (kv.val == "music");
+        // Some lighting modes need to be restarted to work properly with the new mode
+        if (mGlobalController->data.mMode == GlobalController::LightingMode::PULSE)
         {
+          mGlobalController->lightingProcessor =
+              std::make_shared<Pulse>(mGlobalController, mGlobalController->ledController);
+        }
+      }
+      break;
+      case hash("visu"):
+        switch (hash(kv.val.c_str()))
+        {
+          case hash("solid"):
+            SetVisualization(GlobalController::LightingMode::SOLID);
+            break;
+          case hash("fire"):
+            SetVisualization(GlobalController::LightingMode::FIRE);
+            break;
           case hash("spectrum"):
-            if (mGlobalController->data.mMode != GlobalController::LightingMode::SPECTRUM)
-            {
-              mGlobalController->data.mMode = GlobalController::LightingMode::SPECTRUM;
-              mGlobalController->lightingProcessor = std::make_shared<Spectrum>(mGlobalController);
-            }
+            SetVisualization(GlobalController::LightingMode::SPECTRUM);
             break;
           case hash("glow"):
-            if (mGlobalController->data.mMode != GlobalController::LightingMode::GLOW)
-            {
-              mGlobalController->data.mMode = GlobalController::LightingMode::GLOW;
-              mGlobalController->lightingProcessor =
-                  std::make_shared<Glow>(mGlobalController->ledController);
-            }
+            SetVisualization(GlobalController::LightingMode::GLOW);
             break;
           case hash("pulse"):
-            if (mGlobalController->data.mMode != GlobalController::LightingMode::PULSE)
-            {
-              mGlobalController->data.mMode = GlobalController::LightingMode::PULSE;
-              mGlobalController->lightingProcessor =
-                  std::make_shared<Pulse>(mGlobalController, mGlobalController->ledController);
-            }
+            SetVisualization(GlobalController::LightingMode::PULSE);
             break;
           case hash("snake"):
-            if (mGlobalController->data.mMode != GlobalController::LightingMode::SNAKE)
-            {
-              mGlobalController->data.mMode = GlobalController::LightingMode::SNAKE;
-              mGlobalController->lightingProcessor =
-                  std::make_shared<Snake>(mGlobalController->ledController);
-            }
+            SetVisualization(GlobalController::LightingMode::SNAKE);
             break;
           case hash("chaser"):
-            if (mGlobalController->data.mMode != GlobalController::LightingMode::CHASER)
-            {
-              mGlobalController->data.mMode = GlobalController::LightingMode::CHASER;
-              mGlobalController->lightingProcessor =
-                  std::make_shared<Chaser>(mGlobalController, mGlobalController->ledController);
-            }
+            SetVisualization(GlobalController::LightingMode::CHASER);
             break;
           case hash("rain"):
-            if (mGlobalController->data.mMode != GlobalController::LightingMode::RAIN)
-            {
-              mGlobalController->data.mMode = GlobalController::LightingMode::RAIN;
-              mGlobalController->lightingProcessor =
-                  std::make_shared<Rain>(mGlobalController->ledController);
-            }
+            SetVisualization(GlobalController::LightingMode::RAIN);
             break;
           default: break;
         }
         break;
       case hash("color"):
-        if (val == "default")
+        if (kv.val == "default")
         {
           mGlobalController->data.mColor = 0x000000;
         }
         else
         {
-          val.erase(0, 1);
-          mGlobalController->data.mColor = (int)strtol(val.c_str(), NULL, 16);
+          mGlobalController->data.mColor = ExtractColor(kv.val);
           // Some lighting modes need to be restarted to respect new color
           if (mGlobalController->data.mMode == GlobalController::LightingMode::CHASER)
           {
@@ -113,7 +121,7 @@ void CommandInterface::Update()
         break;
       case hash("bright"):
       {
-        mGlobalController->ledController->SetTotalBrightness(strtol(val.c_str(), NULL, 10));
+        mGlobalController->ledController->SetTotalBrightness(ExtractBrightness(kv.val));
         // Some lighting modes need to be restarted to work properly with the new brightness
         if (mGlobalController->data.mMode == GlobalController::LightingMode::PULSE)
         {
@@ -125,6 +133,48 @@ void CommandInterface::Update()
       default: continue;
     }
   }
+}
+
+void CommandInterface::SetVisualization(GlobalController::LightingMode desiredMode)
+{
+  if(mGlobalController->data.mMode != desiredMode)
+  {
+    mGlobalController->data.mMode = desiredMode;
+    using m = GlobalController::LightingMode;
+    switch(desiredMode)
+    {
+      case m::SOLID:
+        mGlobalController->lightingProcessor = std::make_shared<SolidFill>(mGlobalController);
+        break;
+      case m::FIRE:
+        mGlobalController->lightingProcessor = std::make_shared<Fire>(mGlobalController);
+        break;
+      case m::GLOW:
+        mGlobalController->lightingProcessor =
+                  std::make_shared<Glow>(mGlobalController->ledController);
+        break;
+      case m::PULSE:
+        mGlobalController->lightingProcessor =
+                  std::make_shared<Pulse>(mGlobalController, mGlobalController->ledController);
+        break;
+      case m::SNAKE:
+        mGlobalController->lightingProcessor =
+                  std::make_shared<Snake>(mGlobalController->ledController);
+        break;
+      case m::CHASER:
+        mGlobalController->lightingProcessor =
+                  std::make_shared<Chaser>(mGlobalController, mGlobalController->ledController);
+        break;
+      case m::RAIN:
+        mGlobalController->lightingProcessor =
+                  std::make_shared<Rain>(mGlobalController->ledController);
+        break;
+      case m::SPECTRUM:
+        mGlobalController->lightingProcessor = std::make_shared<Spectrum>(mGlobalController);
+      default:
+        break;
+    }
+  }  
 }
 
 CommandInterface::CommandInterface(std::shared_ptr<GlobalController> state)

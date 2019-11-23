@@ -39,12 +39,14 @@ class GlobalController : public std::enable_shared_from_this<GlobalController>
   // --- Data ---
   enum class LightingMode : uint8_t
   {
-    GLOW = 0,
-    PULSE = 1,
-    SNAKE = 2,
-    CHASER = 3,
-    RAIN = 4,
-    SPECTRUM = 5
+    SOLID = 0,
+    FIRE = 1,
+    GLOW = 2,
+    PULSE = 3,
+    SNAKE = 4,
+    CHASER = 5,
+    RAIN = 6,
+    SPECTRUM = 7
   };
 
   struct GlobalData

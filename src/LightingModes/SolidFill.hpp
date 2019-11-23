@@ -1,5 +1,5 @@
 /**
- * @file Pulse.hpp
+ * @file SolidFill.hpp
  * @author your name (you@domain.com)
  * @brief
  * @version 0.1
@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2019
  *
  */
-#ifndef PULSE_HPP
-#define PULSE_HPP
+#ifndef SOLIDFILL_HPP
+#define SOLIDFILL_HPP
 
 #include <memory>
 
@@ -23,11 +23,11 @@ namespace EnlightingLetters
  * @brief
  *
  */
-class Pulse final : public ILightingProcessor
+class SolidFill final : public ILightingProcessor
 {
  public:
-  Pulse(std::shared_ptr<GlobalController> state, std::shared_ptr<LedController> controller);
-  virtual ~Pulse() = default;
+  SolidFill(std::shared_ptr<GlobalController> state);
+  virtual ~SolidFill() = default;
 
   virtual void PerformUpdate() override;
 
@@ -36,13 +36,6 @@ class Pulse final : public ILightingProcessor
  private:
   std::shared_ptr<GlobalController> mGlobalController;
   std::shared_ptr<LedController> mController;
-  bool mIsAscending = true;
-  uint8_t mCurrentHue = 0;
-  uint8_t mCurrentBrightness = 0;
-
-  void MusicModeUpdate();
-
-  void StaticModeUpdate();
 };
 }  // namespace EnlightingLetters
 

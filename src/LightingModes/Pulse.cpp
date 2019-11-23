@@ -9,9 +9,7 @@ Pulse::Pulse(std::shared_ptr<GlobalController> state, std::shared_ptr<LedControl
 
 void Pulse::PerformUpdate()
 {
-  (mGlobalController->data.mMusicActive ? PrepareMusicMode() : PrepareStaticMode());
-  mCurrentBrightness = (mIsAscending ? mCurrentBrightness + 5 : mCurrentBrightness - 5);
-  FastLED.show(mCurrentBrightness);
+  (mGlobalController->data.mMusicActive ? MusicModeUpdate() : StaticModeUpdate());
 }
 
 int Pulse::GetStepsPerAnimation()
@@ -21,17 +19,21 @@ int Pulse::GetStepsPerAnimation()
   return 50;
 }
 
-void Pulse::PrepareMusicMode()
+void Pulse::MusicModeUpdate()
 {
   if (mGlobalController->data.mHasBeat)
   {
-    mIsAscending != mIsAscending;
+    mController->FillAllWithColor(mGlobalController->data.mColor);
+    FastLED.show(mGlobalController->ledController->mBrightness);
+    return;
   }
+  FastLED.show(0);
 }
 
-void Pulse::PrepareStaticMode()
+void Pulse::StaticModeUpdate()
 {
-  if (mCurrentBrightness == mController->mBrightness)
+  mCurrentBrightness = (mIsAscending ? mCurrentBrightness + 5 : mCurrentBrightness - 5);
+  if (mCurrentBrightness == 150)
   {
     mIsAscending = false;
     return;
@@ -47,6 +49,7 @@ void Pulse::PrepareStaticMode()
     mCurrentHue += 5;
     mController->FillAllWithColor(CHSV(mCurrentHue, 255, 255));
   }
+  FastLED.show(mCurrentBrightness);
 }
 
 }  // namespace EnlightingLetters

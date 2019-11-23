@@ -61,6 +61,11 @@ class CommandInterface
   };
 
   std::queue<std::string> mCommandQueue;
+
+  /**
+   * 
+   */
+  void SetVisualization(GlobalController::LightingMode desiredMode);
 };
 
 }  // namespace EnlightingLetters

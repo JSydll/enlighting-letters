@@ -1,5 +1,5 @@
 /**
- * @file Pulse.hpp
+ * @file Fire.hpp
  * @author your name (you@domain.com)
  * @brief
  * @version 0.1
@@ -8,8 +8,8 @@
  * @copyright Copyright (c) 2019
  *
  */
-#ifndef PULSE_HPP
-#define PULSE_HPP
+#ifndef FIRE_HPP
+#define FIRE_HPP
 
 #include <memory>
 
@@ -23,11 +23,11 @@ namespace EnlightingLetters
  * @brief
  *
  */
-class Pulse final : public ILightingProcessor
+class Fire final : public ILightingProcessor
 {
  public:
-  Pulse(std::shared_ptr<GlobalController> state, std::shared_ptr<LedController> controller);
-  virtual ~Pulse() = default;
+  Fire(std::shared_ptr<GlobalController> state);
+  virtual ~Fire() = default;
 
   virtual void PerformUpdate() override;
 
@@ -35,14 +35,6 @@ class Pulse final : public ILightingProcessor
 
  private:
   std::shared_ptr<GlobalController> mGlobalController;
-  std::shared_ptr<LedController> mController;
-  bool mIsAscending = true;
-  uint8_t mCurrentHue = 0;
-  uint8_t mCurrentBrightness = 0;
-
-  void MusicModeUpdate();
-
-  void StaticModeUpdate();
 };
 }  // namespace EnlightingLetters
 
