@@ -10,7 +10,7 @@ namespace EnlightingLetters
 MusicAnalyzer::MusicAnalyzer(std::shared_ptr<GlobalController> globalController)
     : mGlobalController(globalController)
 {
-  mGlobalController->data.mFrequencies.resize(kFrequencyBands);
+  mGlobalController->data.frequencies.resize(kFrequencyBands);
   mOk = true;
 }
 
@@ -56,20 +56,20 @@ void MusicAnalyzer::Update()
       {1, 1}, {2, 3}, {5, 4}, {9, 7}, {16, 20}, {36, 44}, {80, 36}, {116, 12}};
   static long currentValue = 0;
   static uint8_t resetCycle = 0;
-  for (num = 0; num < mGlobalController->data.mFrequencies.size(); ++num)
+  for (num = 0; num < mGlobalController->data.frequencies.size(); ++num)
   {
     currentValue = CalculateAmplitude(real.begin(), mFreqRanges[num].first, mFreqRanges[num].second,
-                                      mGlobalController->data.mFrequencies[num], kOffsets[num]);
-    mGlobalController->data.mFrequencies[num] = currentValue;
-    if (currentValue > mGlobalController->data.mMaxFrequencies[num])
+                                      mGlobalController->data.frequencies[num], kOffsets[num]);
+    mGlobalController->data.frequencies[num] = currentValue;
+    if (currentValue > mGlobalController->data.maxFrequencies[num])
     {
-      mGlobalController->data.mMaxFrequencies[num] = currentValue;
+      mGlobalController->data.maxFrequencies[num] = currentValue;
       continue;
     }
     // mMaxFrequencies must be greater than 0 to prevent IntergerDividedByZero crashes.
-    if (resetCycle++ % 4 == 0 and mGlobalController->data.mMaxFrequencies[num] > 1)
+    if (resetCycle++ % 4 == 0 and mGlobalController->data.maxFrequencies[num] > 1)
     {
-      mGlobalController->data.mMaxFrequencies[num]--;
+      mGlobalController->data.maxFrequencies[num]--;
     }
   }
 }

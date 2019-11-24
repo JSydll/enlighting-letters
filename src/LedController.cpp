@@ -25,7 +25,7 @@ void LedController::SetAnimationSpeed()
 {
   if (mGlobalController->lightingProcessor)
   {
-    mUpdateInterval = milliseconds(mGlobalController->data.mAnimationSpeed /
+    mUpdateInterval = milliseconds(mGlobalController->data.animationSpeed /
                                    mGlobalController->lightingProcessor->GetStepsPerAnimation());
   }
 }

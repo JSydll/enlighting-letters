@@ -12,9 +12,9 @@ SolidFill::SolidFill(std::shared_ptr<GlobalController> state) : mGlobalControlle
 
 void SolidFill::PerformUpdate()
 {
-  if(mCurrentColor != mGlobalController->data.mColor)
+  if (mCurrentColor != mGlobalController->data.color)
   {
-    mCurrentColor = mGlobalController->data.mColor;
+    mCurrentColor = mGlobalController->data.color;
     mGlobalController->ledController->FillAllWithColor(mCurrentColor);
   }
   FastLED.show();

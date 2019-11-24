@@ -18,9 +18,9 @@ void Pulse::PerformUpdate()
   if (mCurrentBrightness == 0)
   {
     mIsAscending = true;
-    if (mGlobalController->data.mColor != 0x000000)
+    if (mGlobalController->data.color != 0x000000)
     {
-      mController->FillAllWithColor(mGlobalController->data.mColor);
+      mController->FillAllWithColor(mGlobalController->data.color);
       return;
     }
     mCurrentHue += 5;

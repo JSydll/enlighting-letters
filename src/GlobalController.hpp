@@ -36,7 +36,7 @@ class GlobalController : public std::enable_shared_from_this<GlobalController>
   std::shared_ptr<CommandInterface> commandInterface;
   std::shared_ptr<ILightingProcessor> lightingProcessor;
   std::shared_ptr<MusicAnalyzer> musicAnalyzer;
-  std::shared_ptr<UpdateService> updateService;
+  std::unique_ptr<UpdateService> updateService;
 
   // --- Data ---
   enum class LightingMode : uint8_t
@@ -53,12 +53,13 @@ class GlobalController : public std::enable_shared_from_this<GlobalController>
 
   struct GlobalData
   {
-    LightingMode mMode = LightingMode::SOLID;  // Active mode
-    int mColor = 0xFFC850;                     // Active color, warm white being the respective default (255, 200, 80)
-    int mAnimationSpeed = 1600;  // Number of milliseconds one full animation cycle should take
-    std::vector<long> mFrequencies;
+    LightingMode mode = LightingMode::SOLID;  // Active mode
+    int color = 0xFFC850;                     // Active color, warm white being the respective default (255, 200, 80)
+    int animationSpeed = 1600;  // Number of milliseconds one full animation cycle should take
+    std::vector<long> frequencies;
     // Must not be 0!
-    std::vector<long> mMaxFrequencies = {1, 1, 1, 1, 1, 1, 1, 1};
+    std::vector<long> maxFrequencies = {1, 1, 1, 1, 1, 1, 1, 1};
+    bool updateActive = false;
   } data;
 
  private:

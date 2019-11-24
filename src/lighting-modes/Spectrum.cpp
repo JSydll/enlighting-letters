@@ -55,11 +55,11 @@ void Spectrum::PerformUpdate()
   static int mappedHeight = 0;
   static int index = 0;
   // For each frequency band calculate fill height
-  for (freqNum = 0; freqNum < mController->data.mFrequencies.size(); ++freqNum)
+  for (freqNum = 0; freqNum < mController->data.frequencies.size(); ++freqNum)
   {
     auto& seg = kChannels[kBandToChannelMapping[freqNum]];
-    mappedHeight = map(mController->data.mFrequencies[freqNum], 0,
-                       mController->data.mMaxFrequencies[freqNum], 0, seg.height);
+    mappedHeight = map(mController->data.frequencies[freqNum], 0,
+                       mController->data.maxFrequencies[freqNum], 0, seg.height);
     index = seg.left.first;
     while (index < seg.left.first + mappedHeight)
     {

@@ -1,7 +1,9 @@
 #include "CommandInterface.hpp"
 
 #include <cstdlib>
+#include <memory>
 
+#include "UpdateService.hpp"
 #include "lighting-modes/Chaser.hpp"
 #include "lighting-modes/Fire.hpp"
 #include "lighting-modes/Glow.hpp"
@@ -60,6 +62,7 @@ void CommandInterface::Update()
   {
     auto cmd = mCommandQueue.front();
     mCommandQueue.pop();
+    mGlobalController->console().printf("BT cmd: <%s>\n", cmd.c_str());
     auto kv = ExtractKV(cmd);
     switch (hash(kv.key.c_str()))
     {
@@ -78,17 +81,17 @@ void CommandInterface::Update()
         }
         break;
       case hash("color"):
-        if (kv.val == "default")
+        if (kv.val == std::string("default"))
         {
-          mGlobalController->data.mColor = 0x000000;
+          mGlobalController->data.color = 0x000000;
         }
         else
         {
-          mGlobalController->data.mColor = ExtractColor(kv.val);
+          mGlobalController->data.color = ExtractColor(kv.val);
           // Some lighting modes need to be restarted to respect new color
-          if (mGlobalController->data.mMode == Mode_t::CHASER)
+          if (mGlobalController->data.mode == Mode_t::CHASER)
           {
-            CRGBPalette16 singleFillPalette(CRGB(mGlobalController->data.mColor));
+            CRGBPalette16 singleFillPalette(CRGB(mGlobalController->data.color));
             mGlobalController->lightingProcessor = std::make_shared<Chaser>(
                 mGlobalController, mGlobalController->ledController, singleFillPalette);
           }
@@ -98,11 +101,25 @@ void CommandInterface::Update()
       {
         mGlobalController->ledController->SetTotalBrightness(ExtractBrightness(kv.val));
         // Some lighting modes need to be restarted to work properly with the new brightness
-        if (mGlobalController->data.mMode == Mode_t::PULSE)
+        if (mGlobalController->data.mode == Mode_t::PULSE)
         {
           mGlobalController->lightingProcessor =
               std::make_shared<Pulse>(mGlobalController, mGlobalController->ledController);
         }
+      }
+      break;
+      case hash("wifi"):
+      {
+        KeyValue network{UpdateService::kDefaultWifiSSID, UpdateService::kDefaultPassword};
+        // Another configuration than the default one currently not supported
+        mGlobalController->updateService = std::unique_ptr<UpdateService>(
+            new UpdateService(mGlobalController, network.key, network.val));
+        if (not mGlobalController->updateService->IsOk())
+        {
+          mGlobalController->updateService.release(); 
+          break;
+        }
+        mGlobalController->data.updateActive = true;
       }
       break;
       default: continue;
@@ -112,9 +129,9 @@ void CommandInterface::Update()
 
 void CommandInterface::SetVisualization(Mode_t desiredMode)
 {
-  if (mGlobalController->data.mMode != desiredMode)
+  if (mGlobalController->data.mode != desiredMode)
   {
-    mGlobalController->data.mMode = desiredMode;
+    mGlobalController->data.mode = desiredMode;
     using m = Mode_t;
     switch (desiredMode)
     {

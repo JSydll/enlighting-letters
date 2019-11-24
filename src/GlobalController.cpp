@@ -6,6 +6,8 @@
 #include "UpdateService.hpp"
 #include "lighting-modes/SolidFill.hpp"
 
+#include <memory>
+
 
 namespace EnlightingLetters
 {
@@ -20,6 +22,5 @@ void GlobalController::Init()
   // Default the lightingProcessor to SolidFill
   lightingProcessor = std::make_shared<SolidFill>(shared_from_this());
   musicAnalyzer = std::make_shared<MusicAnalyzer>(shared_from_this());
-  updateService = std::make_shared<UpdateService>(shared_from_this());
 }
 }

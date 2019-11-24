@@ -1,22 +1,49 @@
 #include "UpdateService.hpp"
 
+#include <ESPmDNS.h>
 #include <Update.h>
+#include <WiFi.h>
 #include <WiFiClient.h>
-#include "WiFi.h"
 
 #include "sites/LoginHtml.hpp"
 #include "sites/UploadHtml.hpp"
 
 namespace EnlightingLetters
 {
-UpdateService::UpdateService(std::shared_ptr<GlobalController> ctl)
-    : mController(ctl), mServer(kServerPort)
+namespace
 {
+}
+
+UpdateService::UpdateService(std::shared_ptr<GlobalController> ctl, const std::string& SSID,
+                             const std::string& pwd)
+    : mController(ctl), mServer(kServerPort), mInitialized(false)
+{
+  mController->console().printf("Trying to connect to network %s...\n", SSID.c_str());
+  WiFi.begin(SSID.c_str(), pwd.c_str());
+  for (uint8_t count = 0;; ++count)
+  {
+    // Abort after 2 minutes of waiting
+    if (count == 120)
+    {
+      mController->console().println(" Connection failed.");
+      return;
+    }
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      break;
+    }
+    delay(1000);
+    mController->console().print(".");
+  }
+  mController->console().printf("\nConnected to %s with %s.\n", SSID.c_str(),
+                                WiFi.localIP().toString().c_str());
+  if (!MDNS.begin(kHostName))
+  {  // http://<kHostName>.local
+    mController->console().println("Error setting up mDNS server.");
+    return;
+  }
+  mController->console().printf("mDNS server started with host name %s.\n", kHostName);
   mController->console().println("Starting Update Server…");
-  WiFi.softAP(kWifiName.c_str(), kWifiPassword.c_str());
-  mServerIP = WiFi.softAPIP();
-  mController->console().print("Server address: ");
-  mController->console().println(mServerIP);
   // Configure server callbacks
   mServer.on("/", HTTP_GET, [this]() {
     mServer.sendHeader("Connection", "close");
@@ -68,7 +95,13 @@ UpdateService::UpdateService(std::shared_ptr<GlobalController> ctl)
   mServer.begin();
 }
 
-UpdateService::~UpdateService() {}
+UpdateService::~UpdateService() { mServer.stop(); }
 
-void UpdateService::Process() { mServer.handleClient(); }
+void UpdateService::Process()
+{
+  if (mInitialized)
+  {
+    mServer.handleClient();
+  }
+}
 }

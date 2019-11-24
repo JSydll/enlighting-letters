@@ -8,6 +8,7 @@
 #include "LedController.hpp"
 #include "MusicAnalyzer.hpp"
 #include "SerialConsole.hpp"
+#include "UpdateService.hpp"
 
 auto globalController = EnlightingLetters::GlobalController::Create();
 
@@ -23,8 +24,12 @@ void loop()
   using namespace EnlightingLetters;
   // Command interface
   globalController->commandInterface->Update();
+  if (globalController->updateService and globalController->data.updateActive)
+  {
+    globalController->updateService->Process();
+  }
   // As the analysis is expensive, only do it when needed
-  if (globalController->data.mMode == GlobalController::LightingMode::SPECTRUM)
+  if (globalController->data.mode == GlobalController::LightingMode::SPECTRUM)
   {
     // Get input
     globalController->musicAnalyzer->Update();
