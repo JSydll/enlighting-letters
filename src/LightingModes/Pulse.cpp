@@ -9,29 +9,6 @@ Pulse::Pulse(std::shared_ptr<GlobalController> state, std::shared_ptr<LedControl
 
 void Pulse::PerformUpdate()
 {
-  (mGlobalController->data.mMusicActive ? MusicModeUpdate() : StaticModeUpdate());
-}
-
-int Pulse::GetStepsPerAnimation()
-{
-  // The brightness increases in steps of 5 and decreases in steps of 5, from 0 to 255 and back.
-  // So totally, we have around 50 steps per animation
-  return 50;
-}
-
-void Pulse::MusicModeUpdate()
-{
-  if (mGlobalController->data.mHasBeat)
-  {
-    mController->FillAllWithColor(mGlobalController->data.mColor);
-    FastLED.show(mGlobalController->ledController->mBrightness);
-    return;
-  }
-  FastLED.show(0);
-}
-
-void Pulse::StaticModeUpdate()
-{
   mCurrentBrightness = (mIsAscending ? mCurrentBrightness + 5 : mCurrentBrightness - 5);
   if (mCurrentBrightness == 150)
   {
@@ -50,6 +27,13 @@ void Pulse::StaticModeUpdate()
     mController->FillAllWithColor(CHSV(mCurrentHue, 255, 255));
   }
   FastLED.show(mCurrentBrightness);
+}
+
+int Pulse::GetStepsPerAnimation()
+{
+  // The brightness increases in steps of 5 and decreases in steps of 5, from 0 to 255 and back.
+  // So totally, we have around 50 steps per animation
+  return 50;
 }
 
 }  // namespace EnlightingLetters

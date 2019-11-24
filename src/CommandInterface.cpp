@@ -63,37 +63,12 @@ void CommandInterface::Update()
     auto kv = ExtractKV(cmd);
     switch (hash(kv.key.c_str()))
     {
-      case hash("mode"):
-      {
-        if (kv.val == "music")
-        {
-          switch (mGlobalController->data.mMode)
-          {
-            case Mode_t::PULSE:
-              // Needs to be restarted
-              mGlobalController->lightingProcessor =
-                  std::make_shared<Pulse>(mGlobalController, mGlobalController->ledController);
-            case Mode_t::SPECTRUM: mGlobalController->data.mMusicActive = true; break;
-            default:
-              // Music mode irrelevant
-              break;
-          }
-        }
-        else
-        {
-          mGlobalController->data.mMusicActive = false;
-        }
-      }
-      break;
       case hash("visu"):
         switch (hash(kv.val.c_str()))
         {
           case hash("solid"): SetVisualization(Mode_t::SOLID); break;
           case hash("fire"): SetVisualization(Mode_t::FIRE); break;
-          case hash("spectrum"):
-            SetVisualization(Mode_t::SPECTRUM);
-            mGlobalController->data.mMusicActive = true;  // Default
-            break;
+          case hash("spectrum"): SetVisualization(Mode_t::SPECTRUM); break;
           case hash("glow"): SetVisualization(Mode_t::GLOW); break;
           case hash("pulse"): SetVisualization(Mode_t::PULSE); break;
           case hash("snake"): SetVisualization(Mode_t::SNAKE); break;

@@ -24,12 +24,12 @@ void loop()
   // Command interface
   globalController->commandInterface->Update();
   // As the analysis is expensive, only do it when needed
-  if(globalController->data.mMusicActive)
+  if (globalController->data.mMode == GlobalController::LightingMode::SPECTRUM)
   {
     // Get input
     globalController->musicAnalyzer->Update();
   }
-  
+
   // Process and generate output
   globalController->ledController->Update();
 }

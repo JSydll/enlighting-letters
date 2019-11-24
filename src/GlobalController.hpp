@@ -56,11 +56,9 @@ class GlobalController : public std::enable_shared_from_this<GlobalController>
     LightingMode mMode = LightingMode::SOLID;  // Active mode
     int mColor = 0xFFC850;                     // Active color, warm white being the respective default (255, 200, 80)
     int mAnimationSpeed = 1600;  // Number of milliseconds one full animation cycle should take
-    bool mMusicActive = false;
     std::vector<long> mFrequencies;
     // Must not be 0!
     std::vector<long> mMaxFrequencies = {1, 1, 1, 1, 1, 1, 1, 1};
-    bool mHasBeat = false;
   } data;
 
  private:

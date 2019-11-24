@@ -72,12 +72,5 @@ void MusicAnalyzer::Update()
       mGlobalController->data.mMaxFrequencies[num]--;
     }
   }
-  // Beat detection
-  static bool currentPeak = false;
-  static bool lastPeak = false;
-  currentPeak = mGlobalController->data.mFrequencies[kBpmFrequency] >
-                0.8 * mGlobalController->data.mMaxFrequencies[kBpmFrequency];
-  mGlobalController->data.mHasBeat = (currentPeak and not lastPeak);
-  lastPeak = currentPeak;
 }
 }  // namespace EnlightingLetters
