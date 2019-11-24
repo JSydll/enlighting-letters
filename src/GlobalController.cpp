@@ -2,9 +2,10 @@
 #include "CommandInterface.hpp"
 #include "LedController.hpp"
 // Default lighting mode (rest is in command interface)
-#include "LightingModes/SolidFill.hpp"
 #include "MusicAnalyzer.hpp"
 #include "UpdateService.hpp"
+#include "lighting-modes/SolidFill.hpp"
+
 
 namespace EnlightingLetters
 {

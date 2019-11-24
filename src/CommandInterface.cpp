@@ -2,14 +2,14 @@
 
 #include <cstdlib>
 
-#include "LightingModes/Chaser.hpp"
-#include "LightingModes/Fire.hpp"
-#include "LightingModes/Glow.hpp"
-#include "LightingModes/Pulse.hpp"
-#include "LightingModes/Rain.hpp"
-#include "LightingModes/Snake.hpp"
-#include "LightingModes/SolidFill.hpp"
-#include "LightingModes/Spectrum.hpp"
+#include "lighting-modes/Chaser.hpp"
+#include "lighting-modes/Fire.hpp"
+#include "lighting-modes/Glow.hpp"
+#include "lighting-modes/Pulse.hpp"
+#include "lighting-modes/Rain.hpp"
+#include "lighting-modes/Snake.hpp"
+#include "lighting-modes/SolidFill.hpp"
+#include "lighting-modes/Spectrum.hpp"
 
 namespace EnlightingLetters
 {

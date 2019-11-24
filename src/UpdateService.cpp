@@ -4,8 +4,8 @@
 #include <WiFiClient.h>
 #include "WiFi.h"
 
-#include "Sites/LoginHtml.hpp"
-#include "Sites/UploadHtml.hpp"
+#include "sites/LoginHtml.hpp"
+#include "sites/UploadHtml.hpp"
 
 namespace EnlightingLetters
 {
