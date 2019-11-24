@@ -1,9 +1,10 @@
 #include "GlobalController.hpp"
-#include "LedController.hpp"
 #include "CommandInterface.hpp"
+#include "LedController.hpp"
 // Default lighting mode (rest is in command interface)
 #include "LightingModes/SolidFill.hpp"
 #include "MusicAnalyzer.hpp"
+#include "UpdateService.hpp"
 
 namespace EnlightingLetters
 {
@@ -18,5 +19,6 @@ void GlobalController::Init()
   // Default the lightingProcessor to SolidFill
   lightingProcessor = std::make_shared<SolidFill>(shared_from_this());
   musicAnalyzer = std::make_shared<MusicAnalyzer>(shared_from_this());
+  updateService = std::make_shared<UpdateService>(shared_from_this());
 }
 }

@@ -22,6 +22,7 @@ namespace EnlightingLetters
 class LedController;
 class CommandInterface;
 class MusicAnalyzer;
+class UpdateService;
 
 class GlobalController : public std::enable_shared_from_this<GlobalController>
 {
@@ -35,6 +36,7 @@ class GlobalController : public std::enable_shared_from_this<GlobalController>
   std::shared_ptr<CommandInterface> commandInterface;
   std::shared_ptr<ILightingProcessor> lightingProcessor;
   std::shared_ptr<MusicAnalyzer> musicAnalyzer;
+  std::shared_ptr<UpdateService> updateService;
 
   // --- Data ---
   enum class LightingMode : uint8_t
